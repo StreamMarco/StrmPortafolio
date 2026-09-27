@@ -1,0 +1,1912 @@
+<!DOCTYPE html>
+<html lang="es" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liquid Glass Interface // Minimal Editorial</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: DM Serif Display, Poppins, & Bebas Neue -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"DM Serif Display"', 'serif'],
+            sans: ['"Poppins"', 'sans-serif'],
+            mono: ['"Bebas Neue"', 'sans-serif'],
+            bebas: ['"Bebas Neue"', 'sans-serif'],
+          },
+          colors: {
+            liquid: {
+              bone: '#F4F2EC',
+              boneLight: '#FAF8F4',
+              boneDark: '#E4DFD5',
+              charcoal: '#1A1D20',
+              graphite: '#0C0F12',
+              glassLight: 'rgba(255, 255, 255, 0.72)',
+              glassDark: 'rgba(20, 24, 30, 0.65)',
+              accent: '#E65D4F',
+              cyan: '#00C2D1',
+              amber: '#F5A623',
+              emerald: '#10B981'
+            }
+          },
+          boxShadow: {
+            'liquid-sm': '0 4px 20px -2px rgba(30, 25, 20, 0.06), inset 0 1px 1px rgba(255, 255, 255, 0.9)',
+            'liquid-md': '0 12px 35px -6px rgba(30, 25, 20, 0.08), inset 0 1.5px 2px rgba(255, 255, 255, 0.95)',
+            'liquid-lg': '0 25px 60px -12px rgba(30, 25, 20, 0.12), inset 0 2px 3px rgba(255, 255, 255, 0.95)',
+            'liquid-dark': '0 25px 60px -15px rgba(0, 0, 0, 0.75), inset 0 1px 1.5px rgba(255, 255, 255, 0.2)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(140, 135, 125, 0.3);
+      border-radius: 9999px;
+    }
+
+    /* Level 1 Scroll List Styling */
+    .level1-scroll-list {
+      overflow-y: scroll !important;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(140, 135, 125, 0.45) transparent;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+    }
+    .level1-scroll-list::-webkit-scrollbar {
+      width: 6px;
+    }
+    .level1-scroll-list::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.04);
+      border-radius: 9999px;
+    }
+    .dark .level1-scroll-list::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .level1-scroll-list::-webkit-scrollbar-thumb {
+      background: rgba(120, 115, 105, 0.4);
+      border-radius: 9999px;
+    }
+    .dark .level1-scroll-list::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.28);
+    }
+    .level1-scroll-list::-webkit-scrollbar-thumb:hover {
+      background: rgba(120, 115, 105, 0.7);
+    }
+    .dark .level1-scroll-list::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Ambient Warm Background with Soft Viscous Caustics */
+    body {
+      background-color: #EFECE6;
+      background-image: 
+        radial-gradient(ellipse at 15% 15%, rgba(255, 255, 255, 0.9) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 85%, rgba(0, 194, 209, 0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 50% 45%, rgba(230, 93, 79, 0.05) 0%, transparent 65%),
+        linear-gradient(135deg, #F4F1EB 0%, #E9E4DC 50%, #E2DDD5 100%);
+      background-attachment: fixed;
+      transition: background-color 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    html.dark body {
+      background-color: #080A0E !important;
+      background-image: 
+        radial-gradient(ellipse at 15% 15%, rgba(0, 194, 209, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 85%, rgba(230, 93, 79, 0.1) 0%, transparent 55%),
+        radial-gradient(ellipse at 50% 50%, rgba(138, 92, 246, 0.08) 0%, transparent 60%),
+        linear-gradient(135deg, #07090C 0%, #0E1218 50%, #06080B 100%) !important;
+      background-attachment: fixed;
+    }
+
+    /* Liquid Glass Panels (Organic Smooth Curves) */
+    .liquid-panel {
+      position: relative;
+      background: linear-gradient(
+        135deg, 
+        rgba(255, 255, 255, 0.82) 0%, 
+        rgba(247, 244, 238, 0.58) 50%, 
+        rgba(255, 255, 255, 0.75) 100%
+      );
+      backdrop-filter: blur(28px) saturate(200%);
+      -webkit-backdrop-filter: blur(28px) saturate(200%);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      box-shadow: 
+        inset 0 1.5px 2px rgba(255, 255, 255, 0.95),
+        inset 0 -1px 2px rgba(0, 0, 0, 0.04),
+        0 16px 36px -10px rgba(45, 40, 35, 0.1);
+    }
+
+    .dark .liquid-panel {
+      background: linear-gradient(
+        135deg, 
+        rgba(255, 255, 255, 0.12) 0%, 
+        rgba(20, 25, 33, 0.65) 50%, 
+        rgba(0, 194, 209, 0.06) 100%
+      );
+      backdrop-filter: blur(32px) saturate(190%);
+      -webkit-backdrop-filter: blur(32px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 
+        inset 0 1.5px 2px rgba(255, 255, 255, 0.35),
+        inset 0 -1.5px 2px rgba(0, 0, 0, 0.6),
+        0 20px 48px -10px rgba(0, 0, 0, 0.7);
+    }
+
+    /* Stage Canvas Liquid Glass */
+    .liquid-stage-glass {
+      position: relative;
+      background: radial-gradient(
+        circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(255, 255, 255, 0.55) 0%,
+        rgba(250, 248, 243, 0.6) 45%,
+        rgba(240, 236, 228, 0.72) 100%
+      );
+      backdrop-filter: blur(36px) saturate(210%);
+      -webkit-backdrop-filter: blur(36px) saturate(210%);
+      border: 1.5px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 
+        inset 0 2px 4px rgba(255, 255, 255, 0.95),
+        inset 0 -2px 3px rgba(0, 0, 0, 0.05),
+        0 24px 50px -12px rgba(35, 30, 25, 0.1);
+    }
+
+    .dark .liquid-stage-glass {
+      background: radial-gradient(
+        circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(0, 194, 209, 0.1) 0%,
+        rgba(18, 23, 31, 0.72) 45%,
+        rgba(10, 13, 18, 0.88) 100%
+      );
+      backdrop-filter: blur(40px) saturate(210%);
+      -webkit-backdrop-filter: blur(40px) saturate(210%);
+      border: 1.5px solid rgba(255, 255, 255, 0.22);
+      box-shadow: 
+        inset 0 2px 4px rgba(255, 255, 255, 0.4),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.8),
+        0 25px 60px rgba(0, 0, 0, 0.8);
+    }
+
+    /* Fluid Caustic Floating Glare */
+    .liquid-caustic-layer {
+      position: absolute;
+      inset: -40%;
+      background: 
+        radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.3) 0%, transparent 40%),
+        radial-gradient(circle at 65% 65%, rgba(0, 194, 209, 0.14) 0%, transparent 45%),
+        radial-gradient(circle at 50% 80%, rgba(230, 93, 79, 0.1) 0%, transparent 40%);
+      filter: blur(35px);
+      animation: liquidDrift 16s ease-in-out infinite alternate;
+      pointer-events: none;
+      mix-blend-mode: overlay;
+    }
+
+    @keyframes liquidDrift {
+      0% { transform: rotate(0deg) scale(1) translate(0px, 0px); }
+      50% { transform: rotate(180deg) scale(1.12) translate(25px, -20px); }
+      100% { transform: rotate(360deg) scale(0.96) translate(-20px, 20px); }
+    }
+
+    /* Fluid Sheen Sweep on Hover */
+    .liquid-btn {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .liquid-btn::after {
+      content: '';
+      position: absolute;
+      top: -120%;
+      left: -150%;
+      width: 300%;
+      height: 300%;
+      background: linear-gradient(
+        60deg,
+        transparent 35%,
+        rgba(255, 255, 255, 0.45) 50%,
+        transparent 65%
+      );
+      opacity: 0;
+      transform: rotate(25deg);
+      transition: opacity 0.3s ease, transform 0.6s ease;
+      pointer-events: none;
+    }
+
+    .liquid-btn:hover::after {
+      opacity: 1;
+      transform: rotate(25deg) translate(35%, 35%);
+    }
+
+    /* Transitions */
+    .menu-slide-enter {
+      animation: menuSlideIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes menuSlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-16px);
+        filter: blur(3px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+        filter: blur(0);
+      }
+    }
+
+    .menu-slide-back {
+      animation: menuSlideBack 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes menuSlideBack {
+      from {
+        opacity: 0;
+        transform: translateX(16px);
+        filter: blur(3px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+        filter: blur(0);
+      }
+    }
+
+    /* Left Dock Collapsing Animation */
+    .dock-collapsed {
+      max-width: 0 !important;
+      width: 0 !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+      margin-left: 0 !important;
+      margin-right: -0.75rem !important;
+      opacity: 0 !important;
+      transform: translateX(-24px) scale(0.9) !important;
+      pointer-events: none !important;
+      overflow: hidden !important;
+      border: none !important;
+    }
+
+    /* Submenus Shifted to the Left to Maximize Workspace */
+    .submenu-shifted {
+      transform: translateX(-0.75rem);
+    }
+    @media (min-width: 1024px) {
+      .submenu-shifted {
+        transform: translateX(-1.5rem);
+        width: 18.5rem !important;
+      }
+    }
+
+    /* Level 3: Ultra-Compact Single Vertical Column */
+    .level3-nav-compact {
+      width: 4.5rem !important;
+      min-width: 4.5rem !important;
+      max-width: 4.5rem !important;
+      align-items: center !important;
+      transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @media (min-width: 640px) {
+      .level3-nav-compact {
+        width: 5rem !important;
+        min-width: 5rem !important;
+        max-width: 5rem !important;
+      }
+    }
+
+    /* Dock Switch Keyframe Animation */
+    @keyframes dockSwitchPop {
+      0% { transform: scale(0.9); }
+      40% { transform: scale(1.16); }
+      100% { transform: scale(1); }
+    }
+    .dock-switch-active {
+      animation: dockSwitchPop 0.36s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      background: rgba(255, 255, 255, 0.95) !important;
+      color: #1A1D20 !important;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12) !important;
+    }
+    .dark .dock-switch-active {
+      background: rgba(255, 255, 255, 0.25) !important;
+      color: #FFFFFF !important;
+      box-shadow: 0 4px 20px rgba(0, 194, 209, 0.25) !important;
+    }
+
+    /* Slide Switch for Dock Sets */
+    @keyframes dockSlideSwitch {
+      0% {
+        opacity: 0;
+        transform: translateY(24px);
+        filter: blur(3px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+      }
+    }
+    .dock-slide-anim {
+      animation: dockSlideSwitch 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Initial Long Bars Animation */
+    .bars-enter-anim {
+      animation: barsEnter 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes barsEnter {
+      0% {
+        opacity: 0;
+        transform: translateX(-24px) scale(0.96);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+      }
+    }
+
+    /* Level 1 3D Infinite Rotary Wheel */
+    .wheel-stage {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      perspective: 1100px;
+      perspective-origin: center center;
+      transform-style: preserve-3d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      touch-action: none;
+      overflow: hidden;
+      mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
+    }
+
+    .wheel-item {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 132px;
+      margin-top: -66px;
+      transform-style: preserve-3d;
+      will-change: transform, opacity;
+      cursor: pointer;
+      transition: box-shadow 0.2s ease, border-color 0.2s ease;
+      backface-visibility: hidden;
+    }
+
+    .wheel-item-active {
+      box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.18), inset 0 2px 2px rgba(255, 255, 255, 0.95) !important;
+      border-color: rgba(255, 255, 255, 0.95) !important;
+    }
+
+    .dark .wheel-item-active {
+      box-shadow: 0 16px 40px -8px rgba(0, 194, 209, 0.3), inset 0 1.5px 2px rgba(255, 255, 255, 0.4) !important;
+      border-color: rgba(0, 194, 209, 0.6) !important;
+    }
+  </style>
+</head>
+
+<body class="text-liquid-charcoal dark:text-[#E8ECF2] font-sans antialiased h-screen max-h-screen flex flex-col justify-between items-center p-3 sm:p-4 lg:p-6 relative overflow-hidden select-none">
+
+  <!-- Ambient Fluid Light Drops in Background -->
+  <div class="absolute -top-36 -left-36 w-[28rem] h-[28rem] rounded-full bg-cyan-400/20 dark:bg-cyan-500/12 blur-3xl pointer-events-none animate-pulse"></div>
+  <div class="absolute -bottom-36 -right-36 w-[28rem] h-[28rem] rounded-full bg-rose-400/20 dark:bg-rose-500/12 blur-3xl pointer-events-none animate-pulse" style="animation-duration: 7s;"></div>
+
+  <!-- Top Fluid Header -->
+  <header class="w-full max-w-6xl rounded-3xl liquid-panel px-6 py-3 flex items-center justify-between gap-4 z-30 transition-all duration-300 mb-3 sm:mb-5 relative">
+    
+    <!-- Home Button & System Callout -->
+    <div class="flex items-center space-x-3 sm:space-x-3.5">
+      <button id="btnTopHome" title="Volver a la página principal" class="liquid-btn w-9 h-9 rounded-2xl bg-white/90 dark:bg-white/15 flex items-center justify-center text-stone-800 dark:text-stone-200 hover:text-stone-950 dark:hover:text-white hover:bg-white dark:hover:bg-white/25 hover:scale-105 active:scale-95 transition-all shadow-sm border border-white/60 dark:border-white/20 group">
+        <svg class="w-4 h-4 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+        </svg>
+      </button>
+      <div>
+        <div class="flex items-center space-x-2">
+          <span class="text-xs sm:text-sm font-sans font-semibold tracking-tight text-stone-900 dark:text-stone-100">ESPACIO EDITORIAL</span>
+          <span class="text-xs font-mono px-2 py-0.5 rounded-full bg-black/5 dark:bg-white/10 text-stone-600 dark:text-stone-300 tracking-wider">LIQUID.03</span>
+        </div>
+        <span id="headerPath" class="hidden md:inline-block text-xs font-mono text-stone-500 dark:text-stone-400 opacity-90 tracking-wider">// MENÚ PRINCIPAL</span>
+      </div>
+    </div>
+
+    <!-- Social Links (LinkedIn, Behance, Mail) -->
+    <div class="flex items-center space-x-1.5 sm:space-x-2.5 bg-black/5 dark:bg-black/40 px-2.5 sm:px-3.5 py-1.5 rounded-full border border-white/60 dark:border-white/10 shadow-inner">
+      <!-- Icono LinkedIn -->
+      <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" title="LinkedIn" class="liquid-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-stone-700 dark:text-stone-300 hover:text-stone-950 dark:hover:text-white hover:bg-white/80 dark:hover:bg-white/20 hover:scale-110 active:scale-95 transition-all duration-200">
+        <svg class="w-4.5 h-4.5 sm:w-5 sm:h-5 fill-current" viewBox="0 0 24 24">
+          <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+        </svg>
+      </a>
+
+      <!-- Icono Behance -->
+      <a href="https://behance.net" target="_blank" rel="noopener noreferrer" title="Behance" class="liquid-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-stone-700 dark:text-stone-300 hover:text-stone-950 dark:hover:text-white hover:bg-white/80 dark:hover:bg-white/20 hover:scale-110 active:scale-95 transition-all duration-200">
+        <svg class="w-4.5 h-4.5 sm:w-5 sm:h-5 fill-current" viewBox="0 0 24 24">
+          <path d="M22 7h-7V5h7v2zm-2.4 8.7c0-2.8-1.9-4.7-4.6-4.7-2.8 0-4.8 2-4.8 4.7 0 2.9 2 4.8 5 4.8 2 0 3.6-1.1 4.2-2.5h-2.2c-.4.5-1.1.8-1.9.8-1.3 0-2.1-.8-2.3-2.1h6.6v-1zm-6.5-1c.2-1.1.9-1.8 1.9-1.8s1.7.7 1.8 1.8h-3.7zM8.7 11.2c.9-.5 1.5-1.4 1.5-2.6 0-2.2-1.7-3.6-4.2-3.6H1v14h5.2c2.7 0 4.6-1.6 4.6-4 0-1.7-1-3.2-2.1-3.8zm-4.9-4h2c1.2 0 1.9.6 1.9 1.6 0 1-.7 1.7-1.9 1.7h-2V7.2zm2.3 9.7h-2.3v-4.1h2.3c1.4 0 2.2.8 2.2 2 0 1.3-.8 2.1-2.2 2.1z"/>
+        </svg>
+      </a>
+
+      <!-- Icono Mail -->
+      <a href="mailto:contact@liquid.editorial" title="Contacto por Correo" class="liquid-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-stone-700 dark:text-stone-300 hover:text-stone-950 dark:hover:text-white hover:bg-white/80 dark:hover:bg-white/20 hover:scale-110 active:scale-95 transition-all duration-200">
+        <svg class="w-4.5 h-4.5 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Right Controls: Light / Dark Mode -->
+    <div class="flex items-center space-x-2 sm:space-x-3 font-mono">
+      
+      <!-- Theme Switcher with Smooth Rounded Pill Toggle -->
+      <div class="flex items-center bg-black/5 dark:bg-black/50 p-1 rounded-full border border-white/60 dark:border-white/10 text-xs shadow-inner">
+        <button id="btnLightMode" class="liquid-btn flex items-center space-x-1.5 px-3 py-1 rounded-full bg-white text-stone-900 dark:text-stone-400 font-semibold shadow-sm transition">
+          <span class="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block"></span>
+          <span class="hidden sm:inline text-xs tracking-wider">CLARO</span>
+        </button>
+        <button id="btnDarkMode" class="liquid-btn flex items-center space-x-1.5 px-3 py-1 rounded-full bg-transparent text-stone-500 dark:text-white font-semibold transition">
+          <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 inline-block"></span>
+          <span class="hidden sm:inline text-xs tracking-wider">OSCURO</span>
+        </button>
+      </div>
+
+    </div>
+
+  </header>
+
+  <main class="w-full max-w-6xl flex-1 min-h-0 h-full max-h-[calc(100vh-5.5rem)] flex flex-col md:flex-row items-stretch gap-4 sm:gap-6 relative z-10">
+    
+    <!-- INITIAL VIEW: 3 Long Bars on the Left ("Texto 1", "Texto 2", "Texto 3") -->
+    <div id="initialBarsContainer" class="flex flex-col justify-between gap-3 sm:gap-4 w-full md:w-80 lg:w-96 shrink-0 transition-all duration-500 ease-out z-20 bars-enter-anim self-stretch">
+      
+      <!-- Long Bar 1: Pluma Vectorial (Texto 1) -->
+      <button id="initialBarA" data-mode="A" class="initial-bar-btn liquid-btn flex-1 w-full text-left p-4 sm:p-5 rounded-3xl liquid-panel hover:bg-white/90 dark:hover:bg-white/20 hover:scale-[1.01] active:scale-[0.99] transition-all flex flex-col justify-between group shadow-liquid-md border border-white/90 dark:border-white/20">
+        <!-- Top Row: Icon + Title + Arrow -->
+        <div class="flex items-center justify-between w-full mb-2">
+          <div class="flex items-center space-x-3.5">
+            <div class="w-11 h-11 rounded-2xl bg-white/90 dark:bg-white/20 text-stone-900 dark:text-white flex items-center justify-center shadow-sm border border-white/80 dark:border-white/30 group-hover:scale-110 transition-transform">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l7-7 3 3-7 7-3-3z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 2l7.586 7.586"/>
+                <circle cx="11" cy="11" r="1.5" stroke-width="1.8"/>
+              </svg>
+            </div>
+            <div>
+              <span class="text-base sm:text-lg font-sans font-semibold tracking-wide block text-stone-900 dark:text-white group-hover:translate-x-0.5 transition-transform">
+                Texto 1
+              </span>
+              <span class="text-xs font-mono tracking-wider text-rose-600 dark:text-rose-400 font-semibold">
+                // MOTOR VECTORIAL
+              </span>
+            </div>
+          </div>
+          <div class="w-8 h-8 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center font-mono text-stone-500 dark:text-stone-300 group-hover:bg-stone-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-stone-900 transition-colors">
+            &rarr;
+          </div>
+        </div>
+
+        <!-- Middle: Expanded Description -->
+        <p class="text-xs sm:text-[13px] font-sans text-stone-600 dark:text-stone-300 leading-relaxed my-1.5">
+          Calibración de trazados fluidos, matrices analíticas y optimización de curvas armónicas de alta precisión con renderizado vectorial en tiempo real.
+        </p>
+
+        <!-- Bottom Meta Row -->
+        <div class="flex items-center justify-between pt-2 border-t border-black/5 dark:border-white/10 text-xs font-mono text-stone-500 dark:text-stone-400">
+          <span class="flex items-center space-x-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+            <span>MOD_VEC.01</span>
+          </span>
+          <span class="px-2 py-0.5 rounded-full bg-black/5 dark:bg-white/10 text-[11px] tracking-wider">
+            8 SUBMENÚS
+          </span>
+        </div>
+      </button>
+
+      <!-- Long Bar 2: Cubo 3D con Engranaje (Texto 2) -->
+      <button id="initialBarB" data-mode="B" class="initial-bar-btn liquid-btn flex-1 w-full text-left p-4 sm:p-5 rounded-3xl liquid-panel hover:bg-white/90 dark:hover:bg-white/20 hover:scale-[1.01] active:scale-[0.99] transition-all flex flex-col justify-between group shadow-liquid-md border border-white/90 dark:border-white/20">
+        <!-- Top Row: Icon + Title + Arrow -->
+        <div class="flex items-center justify-between w-full mb-2">
+          <div class="flex items-center space-x-3.5">
+            <div class="w-11 h-11 rounded-2xl bg-white/90 dark:bg-white/20 text-stone-900 dark:text-white flex items-center justify-center shadow-sm border border-white/80 dark:border-white/30 group-hover:scale-110 transition-transform">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 2.5L4 7v10l8 4.5 8-4.5V7L12 2.5z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 12L4 7M12 12l8-5M12 12v9.5"/>
+                <circle cx="12" cy="12" r="2" stroke-width="1.5" class="stroke-stone-700 dark:stroke-stone-200 fill-white dark:fill-stone-800"/>
+              </svg>
+            </div>
+            <div>
+              <span class="text-base sm:text-lg font-sans font-semibold tracking-wide block text-stone-900 dark:text-white group-hover:translate-x-0.5 transition-transform">
+                Texto 2
+              </span>
+              <span class="text-xs font-mono tracking-wider text-cyan-600 dark:text-cyan-400 font-semibold">
+                // GEOMETRÍA 3D
+              </span>
+            </div>
+          </div>
+          <div class="w-8 h-8 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center font-mono text-stone-500 dark:text-stone-300 group-hover:bg-stone-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-stone-900 transition-colors">
+            &rarr;
+          </div>
+        </div>
+
+        <!-- Middle: Expanded Description -->
+        <p class="text-xs sm:text-[13px] font-sans text-stone-600 dark:text-stone-300 leading-relaxed my-1.5">
+          Parametrización topológica, materiales refractivos y cálculo cáustico volumétrico con control de cinemática inversa y subdivisión poligonal.
+        </p>
+
+        <!-- Bottom Meta Row -->
+        <div class="flex items-center justify-between pt-2 border-t border-black/5 dark:border-white/10 text-xs font-mono text-stone-500 dark:text-stone-400">
+          <span class="flex items-center space-x-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+            <span>MOD_GEO.02</span>
+          </span>
+          <span class="px-2 py-0.5 rounded-full bg-black/5 dark:bg-white/10 text-[11px] tracking-wider">
+            8 SUBMENÚS
+          </span>
+        </div>
+      </button>
+
+      <!-- Long Bar 3: Claqueta de Video (Texto 3) -->
+      <button id="initialBarC" data-mode="C" class="initial-bar-btn liquid-btn flex-1 w-full text-left p-4 sm:p-5 rounded-3xl liquid-panel hover:bg-white/90 dark:hover:bg-white/20 hover:scale-[1.01] active:scale-[0.99] transition-all flex flex-col justify-between group shadow-liquid-md border border-white/90 dark:border-white/20">
+        <!-- Top Row: Icon + Title + Arrow -->
+        <div class="flex items-center justify-between w-full mb-2">
+          <div class="flex items-center space-x-3.5">
+            <div class="w-11 h-11 rounded-2xl bg-white/90 dark:bg-white/20 text-stone-900 dark:text-white flex items-center justify-center shadow-sm border border-white/80 dark:border-white/30 group-hover:scale-110 transition-transform">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <rect width="18" height="12" x="3" y="8.5" rx="2" stroke-width="1.8"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 13h18"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 8.5l16-4"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 7.5l2-2M12 6.5l2-2M17 5.5l2-2"/>
+              </svg>
+            </div>
+            <div>
+              <span class="text-base sm:text-lg font-sans font-semibold tracking-wide block text-stone-900 dark:text-white group-hover:translate-x-0.5 transition-transform">
+                Texto 3
+              </span>
+              <span class="text-xs font-mono tracking-wider text-amber-600 dark:text-amber-400 font-semibold">
+                // LÍNEA CINEMÁTICA
+              </span>
+            </div>
+          </div>
+          <div class="w-8 h-8 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center font-mono text-stone-500 dark:text-stone-300 group-hover:bg-stone-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-stone-900 transition-colors">
+            &rarr;
+          </div>
+        </div>
+
+        <!-- Middle: Expanded Description -->
+        <p class="text-xs sm:text-[13px] font-sans text-stone-600 dark:text-stone-300 leading-relaxed my-1.5">
+          Composición audiovisual multicapa, etalonaje cromático de 32 bits y sincronización precisa fotograma a fotograma con latencia reducida.
+        </p>
+
+        <!-- Bottom Meta Row -->
+        <div class="flex items-center justify-between pt-2 border-t border-black/5 dark:border-white/10 text-xs font-mono text-stone-500 dark:text-stone-400">
+          <span class="flex items-center space-x-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+            <span>MOD_CIN.03</span>
+          </span>
+          <span class="px-2 py-0.5 rounded-full bg-black/5 dark:bg-white/10 text-[11px] tracking-wider">
+            8 SUBMENÚS
+          </span>
+        </div>
+      </button>
+
+    </div>
+
+    <!-- WORKSPACE COMPONENT 1: Small Icon Dock Rail (Hidden in initial state, shown when a bar is selected) -->
+    <aside id="leftDock" class="hidden flex-col items-center justify-between py-8 px-3 rounded-full liquid-panel w-16 min-h-[380px] shrink-0 transition-all duration-500 ease-out self-center my-auto">
+      <div class="flex flex-col items-center justify-around h-full space-y-8 my-auto">
+        
+        <!-- 1. Pluma de vectores (Vector Pen -> Serie A) -->
+        <button id="dockBtnPen" data-mode="A" title="Herramienta Pluma Vectorial (Serie A)" class="liquid-btn dock-item w-11 h-11 rounded-2xl bg-white/95 dark:bg-white/25 text-stone-900 dark:text-white flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-sm border border-white/80 dark:border-white/30">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l7-7 3 3-7 7-3-3z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 2l7.586 7.586"/>
+            <circle cx="11" cy="11" r="1.5" stroke-width="1.8"/>
+          </svg>
+        </button>
+
+        <!-- 2. Cubo 3D con engranaje (3D Cube with Gear -> Serie B) -->
+        <button id="dockBtnCubeGear" data-mode="B" title="Geometría 3D y Parámetros (Serie B)" class="liquid-btn dock-item w-11 h-11 rounded-2xl text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/10 flex items-center justify-center border border-transparent hover:border-white/50 dark:hover:border-white/20 hover:scale-105 active:scale-95 transition-all">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 2.5L4 7v10l8 4.5 8-4.5V7L12 2.5z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 12L4 7M12 12l8-5M12 12v9.5"/>
+            <circle cx="12" cy="12" r="2" stroke-width="1.5" class="stroke-stone-700 dark:stroke-stone-200 fill-white dark:fill-stone-800"/>
+          </svg>
+        </button>
+
+        <!-- 3. Claqueta de video (Film Clapperboard -> Serie C) -->
+        <button id="dockBtnClapper" data-mode="C" title="Claqueta de Video (Serie C)" class="liquid-btn dock-item w-11 h-11 rounded-2xl text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/10 flex items-center justify-center border border-transparent hover:border-white/50 dark:hover:border-white/20 hover:scale-105 active:scale-95 transition-all">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <rect width="18" height="12" x="3" y="8.5" rx="2" stroke-width="1.8"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 13h18"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 8.5l16-4"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 7.5l2-2M12 6.5l2-2M17 5.5l2-2"/>
+          </svg>
+        </button>
+
+      </div>
+    </aside>
+
+    <!-- WORKSPACE COMPONENT 2: Floating Submenu Pills (Hidden initially, shown alongside the dock) -->
+    <nav id="submenuNav" class="hidden w-full md:w-72 lg:w-80 flex-col self-stretch shrink-0 z-20 gap-2.5 transition-all duration-500 ease-out h-full min-h-0 max-h-full">
+      
+      <!-- Botón Volver Suelto (Píldora Orgánica) -->
+      <button id="btnReturn" class="hidden shrink-0 items-center justify-between px-5 py-3 rounded-2xl liquid-panel text-xs font-mono font-semibold text-stone-800 dark:text-stone-200 hover:bg-white/90 dark:hover:bg-white/20 hover:scale-[1.01] transition-all group w-full mb-1">
+        <div class="flex items-center space-x-2">
+          <span class="text-stone-900 dark:text-white font-bold">&larr;</span>
+          <span id="btnReturnLabel" class="tracking-wide uppercase">VOLVER AL NIVEL ANTERIOR</span>
+        </div>
+        <span id="currentLevelTag" class="text-xs font-mono px-2 py-0.5 rounded-full bg-black/5 dark:bg-white/10 tracking-wider">NIVEL 01</span>
+      </button>
+
+      <!-- Botones Verticales Sueltos Centrados (Inyectados dinámicamente) -->
+      <div id="verticalButtonsStack" class="flex-1 flex flex-col justify-between gap-3 items-stretch w-full">
+        <!-- Renderizado dinámicamente -->
+      </div>
+    </nav>
+
+    <!-- RECUADRO DERECHO: Canvas de Cristal Líquido (Completamente Vacío por Defecto, se Ilumina en Hover) -->
+    <section id="rightStage" class="flex-1 rounded-[2.5rem] liquid-stage-glass relative overflow-hidden transition-all duration-500 min-h-[460px] flex items-center justify-center p-8 sm:p-14 border border-white/80 dark:border-white/15">
+      
+      <!-- Viscous Liquid Caustic Drift Background -->
+      <div class="liquid-caustic-layer"></div>
+
+      <!-- Resplandor ambiental dinámico de color al hacer hover -->
+      <div id="stageGlow" class="absolute inset-0 opacity-0 transition-opacity duration-500 pointer-events-none z-0"></div>
+
+      <!-- Círculo difuso decorativo tipo gota líquida -->
+      <div id="stageAura" class="absolute w-96 h-96 rounded-full blur-3xl opacity-0 transition-all duration-700 pointer-events-none scale-75 z-0"></div>
+
+      <!-- Contenido textual editorial que se revela de forma fluida al pasar el ratón -->
+      <div id="stageContent" class="relative z-10 text-center max-w-lg opacity-0 transform translate-y-3 transition-all duration-400 pointer-events-none flex flex-col items-center justify-center">
+        
+        <!-- Píldora de Categoría Suave -->
+        <div id="stageBadge" class="px-4 py-1.5 rounded-full text-xs font-mono tracking-wider uppercase mb-5 shadow-sm border bg-white/80 dark:bg-black/50 text-stone-800 dark:text-stone-200 backdrop-blur-md transition-colors font-medium">
+          // COLECCIÓN PRINCIPAL
+        </div>
+
+        <!-- Título principal con DM Serif Display -->
+        <h2 id="stageTitle" class="font-serif font-normal text-4xl sm:text-5xl lg:text-6xl text-stone-900 dark:text-white tracking-tight mb-4 transition-colors drop-shadow-sm leading-[1.1]">
+          NOMBRE_MÓDULO
+        </h2>
+
+        <!-- Separador Líquido Sutil -->
+        <div class="w-20 h-1 rounded-full bg-stone-300/60 dark:bg-white/20 mb-5"></div>
+
+        <!-- Descripción contextual limpia en Poppins -->
+        <p id="stageDesc" class="text-sm sm:text-base font-sans text-stone-700 dark:text-stone-300 font-normal leading-relaxed max-w-md mx-auto mb-6">
+          Espacio editorial configurado en reposo. Seleccione una opción para calibrar el módulo.
+        </p>
+
+        <!-- Indicador de código -->
+        <div class="flex items-center space-x-3 text-xs font-mono text-stone-500 dark:text-stone-400 pt-2 tracking-wider">
+          <span id="stageCode" class="font-semibold text-stone-800 dark:text-stone-200">COD // SYS_01</span>
+          <span class="opacity-40">/</span>
+          <span class="inline-flex items-center space-x-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+            <span class="font-medium text-emerald-600 dark:text-emerald-400">DISPONIBLE</span>
+          </span>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <script>
+    // Audio Feedback Synthesis (Web Audio API)
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+    let soundEnabled = true;
+
+    function playTacticalSound(kind = 'tap') {
+      if (!soundEnabled) return;
+      try {
+        if (!audioCtx) audioCtx = new AudioContextClass();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        const now = audioCtx.currentTime;
+
+        if (kind === 'tap') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(800, now);
+          osc.frequency.exponentialRampToValueAtTime(320, now + 0.04);
+          gain.gain.setValueAtTime(0.04, now);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
+          osc.start(now);
+          osc.stop(now + 0.04);
+        } else if (kind === 'drillDown') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(480, now);
+          osc.frequency.exponentialRampToValueAtTime(960, now + 0.07);
+          gain.gain.setValueAtTime(0.05, now);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.07);
+          osc.start(now);
+          osc.stop(now + 0.07);
+        } else if (kind === 'modeSwitch') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(300, now);
+          osc.frequency.exponentialRampToValueAtTime(650, now + 0.09);
+          gain.gain.setValueAtTime(0.05, now);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.09);
+          osc.start(now);
+          osc.stop(now + 0.09);
+        } else if (kind === 'back') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(620, now);
+          osc.frequency.exponentialRampToValueAtTime(350, now + 0.06);
+          gain.gain.setValueAtTime(0.04, now);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.06);
+          osc.start(now);
+          osc.stop(now + 0.06);
+        }
+      } catch(e) {}
+    }
+
+    // Dynamic Tree Datasets for Modes A (Pen), B (Cube/Gear), and C (Clapper)
+    function createDataset(suffix, modeTitle) {
+      const themes = {
+        A: {
+          descPrefix: 'MOTOR VECTORIAL // Calibración de trazados fluidos, curvas armónicas y matrices de diseño.',
+          colors: [
+            { glow: 'radial-gradient(circle at center, rgba(230, 93, 79, 0.22) 0%, transparent 70%)', aura: 'rgba(230, 93, 79, 0.3)', badge: 'bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-500/30' },
+            { glow: 'radial-gradient(circle at center, rgba(0, 194, 209, 0.2) 0%, transparent 70%)', aura: 'rgba(0, 194, 209, 0.28)', badge: 'bg-cyan-500/10 text-cyan-800 dark:text-cyan-300 border-cyan-500/30' },
+            { glow: 'radial-gradient(circle at center, rgba(16, 185, 129, 0.2) 0%, transparent 70%)', aura: 'rgba(16, 185, 129, 0.28)', badge: 'bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border-emerald-500/30' },
+            { glow: 'radial-gradient(circle at center, rgba(245, 166, 35, 0.2) 0%, transparent 70%)', aura: 'rgba(245, 166, 35, 0.28)', badge: 'bg-amber-500/10 text-amber-800 dark:text-amber-300 border-amber-500/30' }
+          ]
+        },
+        B: {
+          descPrefix: 'GEOMETRÍA 3D // Parametrización espacial, materiales translúcidos y refracción óptica.',
+          colors: [
+            { glow: 'radial-gradient(circle at center, rgba(0, 194, 209, 0.22) 0%, transparent 70%)', aura: 'rgba(0, 194, 209, 0.3)', badge: 'bg-cyan-500/10 text-cyan-800 dark:text-cyan-300 border-cyan-500/30' },
+            { glow: 'radial-gradient(circle at center, rgba(230, 93, 79, 0.2) 0%, transparent 70%)', aura: 'rgba(230, 93, 79, 0.28)', badge: 'bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-500/30' },
+            { glow: 'radial-gradient(circle at center, rgba(168, 85, 247, 0.2) 0%, transparent 70%)', aura: 'rgba(168, 85, 247, 0.28)', badge: 'bg-purple-500/10 text-purple-800 dark:text-purple-300 border-purple-500/30' },
+            { glow: 'radial-gradient(circle at center, rgba(16, 185, 129, 0.2) 0%, transparent 70%)', aura: 'rgba(16, 185, 129, 0.28)', badge: 'bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border-emerald-500/30' }
+          ]
+        },
+        C: {
+          descPrefix: 'LÍNEA CINEMÁTICA // Secuenciación audiovisual, composición lumínica y etalonaje en tiempo real.',
+          colors: [
+            { glow: 'radial-gradient(circle at center, rgba(245, 166, 35, 0.22) 0%, transparent 70%)', aura: 'rgba(245, 166, 35, 0.3)', badge: 'bg-amber-500/10 text-amber-800 dark:text-amber-300 border-amber-500/30' },
+            { glow: 'radial-gradient(circle at center, rgba(230, 93, 79, 0.2) 0%, transparent 70%)', aura: 'rgba(230, 93, 79, 0.28)', badge: 'bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-500/30' },
+            { glow: 'radial-gradient(circle at center, rgba(0, 194, 209, 0.2) 0%, transparent 70%)', aura: 'rgba(0, 194, 209, 0.28)', badge: 'bg-cyan-500/10 text-cyan-800 dark:text-cyan-300 border-cyan-500/30' },
+            { glow: 'radial-gradient(circle at center, rgba(16, 185, 129, 0.2) 0%, transparent 70%)', aura: 'rgba(16, 185, 129, 0.28)', badge: 'bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border-emerald-500/30' }
+          ]
+        }
+      };
+
+      const set = themes[suffix] || themes.A;
+
+      // Nivel 3 (Solo números en los botones)
+      function makeLevel3Items(parentPrefix, parentName, parentColorIdx, count = 6) {
+        const items = [];
+        const details = [
+          'Calibración de frecuencia tangencial y vectorización instantánea.',
+          'Mapeo de subdivisión geométrica y búfer de profundidad z-index.',
+          'Compresión de paquetes de señal con latencia ultra-reducida.',
+          'Modulación armónica de espectro e interpolación adaptativa.',
+          'Sincronización por fotograma con renderizado multifilo.',
+          'Exportación de canal de telemetría y matrices espaciales.'
+        ];
+        for (let i = 1; i <= count; i++) {
+          const numStr = i < 10 ? `0${i}` : `${i}`;
+          const colorTheme = set.colors[(parentColorIdx + i - 1) % set.colors.length];
+          items.push({
+            id: `${parentPrefix}-l3-${i}`,
+            num: numStr,
+            title: `${parentName} // CANAL ${numStr}`,
+            code: `CANAL_${parentPrefix.toUpperCase()}.${numStr}`,
+            category: `NIVEL 03 // CANAL ${numStr}`,
+            desc: details[(i - 1) % details.length],
+            theme: colorTheme
+          });
+        }
+        return items;
+      }
+
+      // Descripciones extendidas y detalladas para cada parámetro de Nivel 2
+      const expandedOptionDescriptions = {
+        'Calibración Nodos': 'Control dinámico de puntos tangenciales, cálculo de curvatura continua y compensación de tensión en vértices primarios sin degradación espectral.',
+        'Curvatura Continua': 'Alineación de derivadas de segundo orden (G2) para transiciones imperceptibles entre segmentos curvos y arcos polares.',
+        'Modulación Tensión': 'Ajuste adaptativo de elasticidad en tiradores Bézier para evitar picos angulares indeseados y discontinuidades en el trazo.',
+        'Offset Adaptativo': 'Generación de trazos equidistantes con algoritmo miter-limit avanzado y preservación de grosor volumétrico constante.',
+        'Puntos de Control': 'Matriz de ponderación polinómica para optimizar la densidad de anclajes vectoriales con latencia reducida en memoria.',
+        'Suavizado Armónico': 'Filtro pasa-bajas geométrico para atenuar micro-fluctuaciones y ruidos parásitos en digitalizaciones de alta frecuencia.',
+        'Polígonos Guía': 'Estructuración de jaula poligonal envolvente para deformaciones no destructivas y edición paramétrica precisa.',
+        'Derivadas Espaciales': 'Cálculo analítico de gradientes y normales para optimización de trazados sobre superficies de doble curvatura.',
+        'Interpolación Cúbica': 'Resolución de splines cúbicos hermitianos con cálculo directo de aceleración angular entre nodos consecutivos.',
+        'Filtro Anti-Jitter': 'Reducción de temblores micro-espaciales en tiempo real para estabilización de entrada digital y precisión milimétrica.',
+        'Muestreo Subpixel': 'Distribución estocástica de muestras con cobertura fraccionaria de píxeles para eliminación de artefactos de aliasing.',
+        'Búfer de Raster': 'Asignación de memoria ultrarrápida para composición de mapas de bits flotantes y texturizado procedural.',
+        'Cobertura Alfa': 'Cálculo de opacidad continua por elemento con corrección gamma integrada y mezclado lineal de alta fidelidad.',
+        'Rotación Cuaterniónica': 'Transformaciones tridimensionales ortogonales libres de bloqueo de cardán (gimbal lock) con interpolación esférica SLERP.',
+        'Escalado Proporcional': 'Redimensión homogénea anisotrópica con preservación estricta de centroides y ratios métricos de volumen.',
+        'Cizallamiento Matricial': 'Deformaciones angulares lineales no uniformes con preservación de continuidad en planos ortogonales.',
+        'Jaula Envolvente': 'Malla de control elástica para torsión geométrica y deformación morfológica en tiempo de ejecución.',
+        'Gradiente de Influencia': 'Ponderación suave de pesos por distancia inversa con amortiguación gaussiana configurable en vértices.',
+        'Preservación de Área': 'Compensación isométrica de superficie para evitar compresión volumétrica durante estiramientos intensos.',
+        'Difusión Cónica': 'Dispersión lumínica y cromática radial con modelado de atenuación según el ángulo de incidencia polar.',
+        'Puntos Cromáticos': 'Posicionamiento de emisores tonales con interpolación espectral perceptual en espacio de color Lab.',
+        'Espectro Fotométrico': 'Distribución espectral de energía luminosa calibrada según estándares físicos de emisión radiométrica.',
+        'Compresión Binaria': 'Serialización compacta de datos geométricos con reducción de entropía sin pérdida de precisión decimal.',
+        'Canal Telemetría': 'Flujo síncrono de coordenadas espaciales, presión y orientación para integración en pipelines externos.',
+        'Normalización Espacial': 'Reescalado automático a espacio de coordenadas canónico unitario [-1, 1] para cálculo numérico estable.',
+        'Bucles de Aristas': 'Optimización topológica de flujo de loops para animación orgánica y distribución uniforme de densidad.',
+        'Subdivisión Dinámica': 'Esquema adaptativo Catmull-Clark con teselación en GPU dependiente del ángulo de visión de cámara.',
+        'Retopología Automática': 'Generación de mallas predominantemente cuadriláteras con alineación automática a campos directores.',
+        'Verificación Manifold': 'Auditoría volumétrica en tiempo real para eliminar aristas no conexas, caras invertidas y vértices duplicados.',
+        'Índice IOR': 'Calibración espectral del índice de refracción según la ley de Snell para materiales ópticos complejos.',
+        'Microfacetas GGX': 'Modelo de distribución de normales microscópicas para specular highlights fotorrealistas y rugosidad anisotrópica.',
+        'Absorción Subsuperficial': 'Simulación de dispersión de luz interna (SSS) con cálculo de profundidad de penetración cromática.',
+        'Búfer de Fotones': 'Mapa tridimensional de emisión y rebote cuántico para concentración de energía lumínica cáustica.',
+        'Dispersión Espectral': 'Descomposición prismática de la luz según longitudes de onda individuales al atravesar medios densos.',
+        'Enfoque Volumétrico': 'Convergencia de haces refractados en medios participativos con atenuación de Beer-Lambert.',
+        'Cadena Articular': 'Jerarquía de restricciones cinemáticas con matriz de grados de libertad independientes por pivote.',
+        'Límites de Rotación': 'Abrazaderas cónicas y restricciones eulerianas para evitar torsiones biomecánicas anómalas.',
+        'Solucionador CCD': 'Algoritmo cíclico descendente por coordenadas para convergencia rápida de efectores finales en tiempo real.',
+        'Espacio Tangente': 'Orientación local de vectores de superficie con preservación de ortonormalidad en mapas de normales.',
+        'Curvatura Superficial': 'Extracción de concavidades y convexidades locales para shaders de desgaste procedural y suciedad.',
+        'Búfer de Oclusión': 'Muestreo de sombreado ambiental por oclusión direccional con filtrado bilateral de ruido.',
+        'Sondas Voxelizadas': 'Estructura octree acelerada para captura y consulta de irradiancia secundaria difusa.',
+        'Rebotes Secundarios': 'Cálculo estocástico de rebotes indirectos de luz para transferencia radiativa intersuperficial.',
+        'Muestreo de Entorno': 'Importancia muestreada de mapas de entorno HDRI de 32 bits con reducción acelerada de varianza.',
+        'Jerarquía BVH': 'Árboles binarios de volúmenes delimitadores con compresión SAH para detección ultrarrápida de colisiones.',
+        'Fricción Dinámica': 'Coeficientes de rozamiento estático y cinético con acoplamiento de fuerzas tangenciales de Coulomb.',
+        'Restitución Elástica': 'Conservación de cantidad de movimiento en impactos con modelado viscoelástico de deformación.',
+        'Distancia de Corte': 'Límites de transición histerética entre niveles de detalle para suprimir el popping geométrico visual.',
+        'Transición Histeresis': 'Amortiguamiento temporal entre niveles de detalle para estabilidad perceptiva en cambios de cámara.',
+        'Streaming de Geometría': 'Carga asíncrona de bloques de malla en búfers directos de GPU con control de presupuesto de memoria.',
+        'Interpolación Bézier': 'Aceleración y desaceleración fluida entre keyframes con curvas de control independientes por canal.',
+        'Mapeo Temporal': 'Remapeo elástico de velocidad de reproducción (time-remapping) con re-muestreo temporal adaptativo.',
+        'Bloqueo de Pista': 'Aislamiento de capas críticas contra sobreescritura accidental durante la composición de secuencias.',
+        'Sincronía SMPTE': 'Bloqueo de código de tiempo de alta precisión con alineación exacta a frecuencia de fotogramas nominal.',
+        'Ruedas Primarias': 'Ajuste ortogonal de sombras (Lift), medios tonos (Gamma) y luces (Gain) con equilibrio de blancos puntual.',
+        'Curvas de Saturación': 'Modulación de intensidad cromática dependiente de luminosidad, matiz y umbral de saturación base.',
+        'Balance de Sombras': 'Corrección de temperatura y tinte en niveles de negros profundos sin alterar las altas luces.',
+        'Espacio Lineal HDR': 'Operaciones matemáticas de mezcla sin compresión perceptual en espacio flotante IEEE 754 de 32 bits.',
+        'Canales Alfa Premultiplicados': 'Superposición de composiciones multicapa eliminando rebordes oscuros en bordes transparentes.',
+        'Mezcla Aditiva': 'Suma espectral de fotones para efectos lumínicos volumétricos, destellos y composiciones pirotécnicas.',
+        'Ángulo Obturador': 'Emulación de disco obturador mecánico de 0° a 360° para estilización cinematográfica del movimiento.',
+        'Vectores de Movimiento': 'Cálculo de desplazamiento por píxel para desenfoque cinemático bidireccional de post-procesamiento.',
+        'Muestras Temporales': 'Densidad de sub-fotogramas para suavizado estocástico del motion blur en movimientos extremos.',
+        'Destello Anamórfico': 'Emulación de rayas horizontales y reflejos internos característicos de lentes anamórficas cilíndricas.',
+        'Fringe Cromático': 'Simulación de aberración cromática transversal en los bordes extremos del campo visual óptico.',
+        'Viñetado Natural': 'Caída progresiva de iluminación según la ley de cosenos a la cuarta (cos⁴) hacia las esquinas.',
+        'Paneo Espacial 3D': 'Posicionamiento psicoacústico biaural con convolución de funciones de transferencia de cabeza (HRTF).',
+        'Compresión Multi-Banda': 'Procesamiento de dinámica sonora dividido en cuatro bandas de frecuencia con cruces transparentes.',
+        'Limitador Transparent': 'Control de picos reales inter-muestra (True Peak) para prevenir distorsión digital en distribución.',
+        'Búfer RAM Progresivo': 'Almacenamiento en caché de fotogramas decodificados en memoria unificada con precarga predictiva.',
+        'Prioridad de Render': 'Asignación dinámica de hilos de cálculo a la zona adyacente al cursor de reproducción de tiempo.',
+        'Descarte Inteligente': 'Política LRU (Least Recently Used) para reciclaje de fotogramas en caché según uso y memoria libre.',
+        'Transformación ODT': 'Transformada de salida de visualización ACES optimizada para perfiles HDR y SDR contemporáneos.',
+        'Metadatos HDR10+': 'Inyección dinámica de curvas de mapeo de tonos escena a escena para pantallas de alta luminosidad.',
+        'Validación Gamut': 'Delimitación de coordenadas cromáticas para garantizar fidelidad tonal sin recorte dentro de Rec.2020.'
+      };
+
+      // 8 Submenús definidos para cada categoría (A, B, C)
+      const subMenusData = {
+        A: [
+          { name: 'Trazados Vectoriales', code: 'SM_1A', desc: 'Calibración de nodos primarios, trazados fluidos y cálculo de tangentes.', opts: ['Calibración Nodos', 'Curvatura Continua', 'Modulación Tensión', 'Offset Adaptativo'] },
+          { name: 'Matrices Bézier', code: 'SM_2A', desc: 'Optimización de arcos de spline y reducción de puntos redundantes.', opts: ['Puntos de Control', 'Suavizado Armónico', 'Polígonos Guía'] },
+          { name: 'Interpolación Curvas', code: 'SM_3A', desc: 'Ajuste de densidad polinomial y cálculo en tiempo real de derivadas.', opts: ['Derivadas Espaciales', 'Interpolación Cúbica', 'Filtro Anti-Jitter'] },
+          { name: 'Rasterizado Adaptativo', code: 'SM_4A', desc: 'Muestreo de antialiasing dinámico con precisión subpixel.', opts: ['Muestreo Subpixel', 'Búfer de Raster', 'Cobertura Alfa'] },
+          { name: 'Transformación Afín', code: 'SM_5A', desc: 'Matrices de escala, traslación e inclinación tridimensional no destructiva.', opts: ['Rotación Cuaterniónica', 'Escalado Proporcional', 'Cizallamiento Matricial'] },
+          { name: 'Deformación Envolvente', code: 'SM_6A', desc: 'Mallas envolventes deformables con mapas de peso paramétricos.', opts: ['Jaula Envolvente', 'Gradiente de Influencia', 'Preservación de Área'] },
+          { name: 'Mallas de Gradiente', code: 'SM_7A', desc: 'Difusión de color multidireccional con puntos de anclaje de luminosidad.', opts: ['Difusión Cónica', 'Puntos Cromáticos', 'Espectro Fotométrico'] },
+          { name: 'Exportación de Rutas', code: 'SM_8A', desc: 'Generación de estándares SVG ultra-optimizados y serialización de datos.', opts: ['Compresión Binaria', 'Canal Telemetría', 'Normalización Espacial'] }
+        ],
+        B: [
+          { name: 'Topología Poligonal', code: 'SM_1B', desc: 'Estructuración de mallas limpias con optimización de bucles de aristas.', opts: ['Bucles de Aristas', 'Subdivisión Dinámica', 'Retopología Automática', 'Verificación Manifold'] },
+          { name: 'Materiales Dieléctricos', code: 'SM_2B', desc: 'Configuración PBR de rugosidad, índice de refracción IOR y fresnel.', opts: ['Índice IOR', 'Microfacetas GGX', 'Absorción Subsuperficial'] },
+          { name: 'Cálculo de Cáusticas', code: 'SM_3B', desc: 'Refracción volumétrica de fotones y enfoque de luz en superficies reflectivas.', opts: ['Búfer de Fotones', 'Dispersión Espectral', 'Enfoque Volumétrico'] },
+          { name: 'Cinemática Inversa', code: 'SM_4B', desc: 'Resolución de cadenas articulares IK y restricciones cinemáticas angulares.', opts: ['Cadena Articular', 'Límites de Rotación', 'Solucionador CCD'] },
+          { name: 'Mapas de Normales', code: 'SM_5B', desc: 'Horned de relieve de alta frecuencia en espacio tangente.', opts: ['Espacio Tangente', 'Curvatura Superficial', 'Búfer de Oclusión'] },
+          { name: 'Iluminación Global', code: 'SM_6B', desc: 'Irradiancia indirecta por vóxeles y sondas de reflexión ambiental.', opts: ['Sondas Voxelizadas', 'Rebotes Secundarios', 'Muestreo de Entorno'] },
+          { name: 'Simulación de Colisiones', code: 'SM_7B', desc: 'Detección continua de impacto con mallas convexas y árboles BVH.', opts: ['Jerarquía BVH', 'Fricción Dinámica', 'Restitución Elástica'] },
+          { name: 'Optimización LOD', code: 'SM_8B', desc: 'Niveles de detalle dinámicos basados en la distancia a la cámara.', opts: ['Distancia de Corte', 'Transición Histeresis', 'Streaming de Geometría'] }
+        ],
+        C: [
+          { name: 'Pistas Secuenciales', code: 'SM_1C', desc: 'Línea de tiempo no lineal con sincronización de fotogramas clave.', opts: ['Interpolación Bézier', 'Mapeo Temporal', 'Bloqueo de Pista', 'Sincronía SMPTE'] },
+          { name: 'Etalonaje Cromático', code: 'SM_2C', desc: 'Curvas de gradación tonal de 32 bits con emulación de película.', opts: ['Ruedas Primarias', 'Curvas de Saturación', 'Balance de Sombras'] },
+          { name: 'Composición Flotante', code: 'SM_3C', desc: 'Fusión matemática en espacio lineal de alto rango dinámico (HDR).', opts: ['Espacio Lineal HDR', 'Canales Alfa Premultiplicados', 'Mezcla Aditiva'] },
+          { name: 'Obturación y Desenfoque', code: 'SM_4C', desc: 'Simulación de ángulo de obturador y desenfoque de movimiento físico.', opts: ['Ángulo Obturador', 'Vectores de Movimiento', 'Muestras Temporales'] },
+          { name: 'Filtros de Difracción', code: 'SM_5C', desc: 'Aberraciones ópticas, destellos anamórficos y dispersión de lente.', opts: ['Destello Anamórfico', 'Fringe Cromático', 'Viñetado Natural'] },
+          { name: 'Mezcla de Audio Multicanal', code: 'SM_6C', desc: 'Monitoreo espectral y posicionamiento biaural con atenuación espacial.', opts: ['Paneo Espacial 3D', 'Compresión Multi-Banda', 'Limitador Transparent'] },
+          { name: 'Caché de Fotogramas', code: 'SM_7C', desc: 'Búfer de reproducción sin pérdidas en memoria compartida acelerada.', opts: ['Búfer RAM Progresivo', 'Prioridad de Render', 'Descarte Inteligente'] },
+          { name: 'Masterización ACES', code: 'SM_8C', desc: 'Conversión estandarizada al espacio de color ACEScc para distribución.', opts: ['Transformación ODT', 'Metadatos HDR10+', 'Validación Gamut'] }
+        ]
+      };
+
+      const selectedSubmenus = subMenusData[suffix] || subMenusData.A;
+
+      const items = selectedSubmenus.map((sm, smIdx) => {
+        const colorIdx = smIdx % set.colors.length;
+        const colorTheme = set.colors[colorIdx];
+
+        // Crear opciones hijas (Nivel 2)
+        const children = sm.opts.map((optName, optIdx) => {
+          const optColorIdx = (colorIdx + optIdx) % set.colors.length;
+          const optTheme = set.colors[optColorIdx];
+          const detailedDesc = expandedOptionDescriptions[optName] || 
+            `Parámetro avanzado de calibración y análisis topológico para ${optName.toLowerCase()} en el motor de procesamiento editorial con precisión flotante.`;
+          return {
+            id: `${sm.code.toLowerCase()}-opt-${optIdx + 1}`,
+            title: optName,
+            code: `OPT_${smIdx + 1}.${optIdx + 1}${suffix}`,
+            category: `PARÁMETRO ${smIdx + 1}.${optIdx + 1}`,
+            desc: detailedDesc,
+            theme: optTheme,
+            children: makeLevel3Items(`${sm.code.toLowerCase()}_opt${optIdx + 1}`, optName, optColorIdx)
+          };
+        });
+
+        return {
+          id: `sub-menu-${smIdx + 1}-${suffix}`,
+          title: sm.name,
+          code: sm.code,
+          category: `MÓDULO 0${smIdx + 1} ${suffix}`,
+          desc: `${set.descPrefix} ${sm.desc}`,
+          theme: colorTheme,
+          children: children
+        };
+      });
+
+      return {
+        id: `root-${suffix}`,
+        title: modeTitle || `Menú Principal ${suffix}`,
+        code: `SYS_${suffix}`,
+        items: items
+      };
+    }
+
+    const datasets = {
+      A: createDataset('A', 'Texto 1'),
+      B: createDataset('B', 'Texto 2'),
+      C: createDataset('C', 'Texto 3')
+    };
+
+    // State Variables
+    let isInitialState = true;
+    let currentMode = 'A';
+    let navigationStack = [datasets[currentMode]];
+    let selectedNode = datasets[currentMode];
+
+    // Wheel State Variables for Level 1 Infinite Drum List
+    const itemStep = 162; // Card height (132px) + expanded gap (30px) for distinct spacing
+    let wheelCurrentOffset = 0;
+    let wheelTargetOffset = 0;
+    let wheelRafId = null;
+    let snapTimeout = null;
+    let isWheelDragging = false;
+    let hasDragged = false;
+    let wheelDragStartY = 0;
+    let wheelStartOffset = 0;
+    let wheelElements = [];
+    let lastCenteredIndex = -1;
+
+    function snapToNearestCard(step = itemStep) {
+      wheelTargetOffset = Math.round(wheelTargetOffset / step) * step;
+    }
+
+    function onWheelRotate(deltaY, customStep = itemStep) {
+      wheelTargetOffset += deltaY * 0.85;
+      if (snapTimeout) clearTimeout(snapTimeout);
+      snapTimeout = setTimeout(() => snapToNearestCard(customStep), 160);
+    }
+
+    function stopLevel1Wheel() {
+      if (wheelRafId) {
+        cancelAnimationFrame(wheelRafId);
+        wheelRafId = null;
+      }
+    }
+
+    // DOM Elements
+    const initialBarsContainer = document.getElementById('initialBarsContainer');
+    const leftDock = document.getElementById('leftDock');
+    const submenuNav = document.getElementById('submenuNav');
+    const verticalButtonsStack = document.getElementById('verticalButtonsStack');
+    const currentLevelTag = document.getElementById('currentLevelTag');
+    const btnReturn = document.getElementById('btnReturn');
+    const btnReturnLabel = document.getElementById('btnReturnLabel');
+    const headerPath = document.getElementById('headerPath');
+
+    // Right Stage DOM Elements
+    const stageGlow = document.getElementById('stageGlow');
+    const stageAura = document.getElementById('stageAura');
+    const stageContent = document.getElementById('stageContent');
+    const stageBadge = document.getElementById('stageBadge');
+    const stageTitle = document.getElementById('stageTitle');
+    const stageDesc = document.getElementById('stageDesc');
+    const stageCode = document.getElementById('stageCode');
+    const rightStage = document.getElementById('rightStage');
+
+    // Hover Details for the Initial 3 Long Bars
+    const initialBarPreviews = {
+      A: {
+        title: 'Texto 1',
+        category: '// MODO PRINCIPAL A',
+        desc: 'Motor vectorial de alta precisión. Calibración de trazados fluidos, armónicos y matrices paramétricas.',
+        code: 'MOD_VEC.01',
+        theme: {
+          glow: 'radial-gradient(circle at center, rgba(230, 93, 79, 0.25) 0%, transparent 70%)',
+          aura: 'rgba(230, 93, 79, 0.35)',
+          badge: 'bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-500/30'
+        }
+      },
+      B: {
+        title: 'Texto 2',
+        category: '// MODO PRINCIPAL B',
+        desc: 'Geometría 3D y topología espacial. Materiales refractivos, refracción cáustica y cálculo volumétrico.',
+        code: 'MOD_GEO.02',
+        theme: {
+          glow: 'radial-gradient(circle at center, rgba(0, 194, 209, 0.25) 0%, transparent 70%)',
+          aura: 'rgba(0, 194, 209, 0.35)',
+          badge: 'bg-cyan-500/10 text-cyan-800 dark:text-cyan-300 border-cyan-500/30'
+        }
+      },
+      C: {
+        title: 'Texto 3',
+        category: '// MODO PRINCIPAL C',
+        desc: 'Línea cinemática y secuenciación audiovisual. Composición lumínica y etalonaje en tiempo real.',
+        code: 'MOD_CIN.03',
+        theme: {
+          glow: 'radial-gradient(circle at center, rgba(245, 166, 35, 0.25) 0%, transparent 70%)',
+          aura: 'rgba(245, 166, 35, 0.35)',
+          badge: 'bg-amber-500/10 text-amber-800 dark:text-amber-300 border-amber-500/30'
+        }
+      }
+    };
+
+    function getCurrentTier() {
+      return navigationStack[navigationStack.length - 1];
+    }
+
+    function showStageHover(item) {
+      if (!item) return;
+
+      const theme = item.theme || {
+        glow: 'radial-gradient(circle at center, rgba(230, 93, 79, 0.22) 0%, transparent 70%)',
+        aura: 'rgba(230, 93, 79, 0.3)',
+        badge: 'bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-500/30'
+      };
+
+      stageGlow.style.background = theme.glow;
+      stageGlow.style.opacity = '1';
+
+      stageAura.style.backgroundColor = theme.aura;
+      stageAura.style.opacity = '0.35';
+      stageAura.style.transform = 'scale(1.15)';
+
+      stageBadge.className = `px-4 py-1.5 rounded-full text-xs font-mono tracking-wider uppercase mb-5 shadow-sm border backdrop-blur-md transition-all font-medium ${theme.badge}`;
+      stageBadge.textContent = item.category || '// MÓDULO ACTIVO';
+
+      stageTitle.textContent = item.title;
+      stageDesc.textContent = item.desc || 'Parámetro funcional configurado para el espacio editorial.';
+      stageCode.textContent = `COD // ${item.code || 'SYS_NODE'}`;
+
+      stageContent.style.opacity = '1';
+      stageContent.style.transform = 'translateY(0)';
+    }
+
+    function clearStageHover() {
+      stageGlow.style.opacity = '0';
+      stageAura.style.opacity = '0';
+      stageAura.style.transform = 'scale(0.75)';
+
+      stageContent.style.opacity = '0';
+      stageContent.style.transform = 'translateY(12px)';
+    }
+
+    function updateHeaderBreadcrumb() {
+      if (!headerPath) return;
+      if (isInitialState) {
+        headerPath.textContent = '// MENÚ PRINCIPAL // SELECCIONAR';
+      } else {
+        const modeName = currentMode === 'A' ? 'TEXTO 1' : currentMode === 'B' ? 'TEXTO 2' : 'TEXTO 3';
+        const parts = [modeName, ...navigationStack.slice(1).map(n => n.title.toUpperCase())];
+        headerPath.textContent = `// ${parts.join(' // ')}`;
+      }
+    }
+
+    // Switch between the Initial 3 Long Bars state and the Dock + Level 1 Submenus state
+    function enterWorkspace(mode = 'A') {
+      isInitialState = false;
+      currentMode = mode;
+      navigationStack = [datasets[currentMode]];
+      selectedNode = datasets[currentMode];
+
+      // Hide the initial long bars container
+      initialBarsContainer.classList.add('hidden');
+      initialBarsContainer.classList.remove('flex');
+
+      // Reveal the small icon dock rail and the submenu column
+      leftDock.classList.remove('hidden');
+      leftDock.classList.add('flex', 'dock-slide-anim');
+
+      submenuNav.classList.remove('hidden');
+      submenuNav.classList.add('flex');
+
+      // Update active dock item visuals
+      updateDockActiveVisuals();
+
+      // Clear hover and render level 1 submenus
+      clearStageHover();
+      renderVerticalMenu('forward');
+      updateHeaderBreadcrumb();
+    }
+
+    function returnToInitialBars() {
+      isInitialState = true;
+      playTacticalSound('back');
+
+      // Hide dock and submenus
+      leftDock.classList.add('hidden');
+      leftDock.classList.remove('flex');
+
+      submenuNav.classList.add('hidden');
+      submenuNav.classList.remove('flex');
+
+      // Re-display the 3 long bars container
+      initialBarsContainer.classList.remove('hidden');
+      initialBarsContainer.classList.add('flex', 'bars-enter-anim');
+
+      navigationStack = [datasets[currentMode]];
+      selectedNode = datasets[currentMode];
+
+      clearStageHover();
+      updateHeaderBreadcrumb();
+    }
+
+    function updateDockActiveVisuals() {
+      const dockButtons = document.querySelectorAll('.dock-item');
+      dockButtons.forEach(b => {
+        const bMode = b.getAttribute('data-mode');
+        if (bMode === currentMode) {
+          b.className = "liquid-btn dock-item w-11 h-11 rounded-2xl bg-white/95 dark:bg-white/25 text-stone-900 dark:text-white flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-sm border border-white/80 dark:border-white/30 dock-switch-active";
+        } else {
+          b.className = "liquid-btn dock-item w-11 h-11 rounded-2xl text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/10 flex items-center justify-center border border-transparent hover:border-white/50 dark:hover:border-white/20 hover:scale-105 active:scale-95 transition-all";
+        }
+      });
+    }
+
+    function updateLayoutForDepth() {
+      const isDeeperLevel = navigationStack.length > 1;
+
+      if (isDeeperLevel) {
+        if (leftDock) leftDock.classList.add('dock-collapsed');
+        if (submenuNav) submenuNav.classList.add('submenu-shifted');
+      } else {
+        if (leftDock) leftDock.classList.remove('dock-collapsed');
+        if (submenuNav) submenuNav.classList.remove('submenu-shifted');
+      }
+    }
+
+    function renderVerticalMenu(animationType = 'forward') {
+      const current = getCurrentTier();
+      const currentDepth = navigationStack.length;
+      const isLevel1 = currentDepth === 1;
+      const isLevel2 = currentDepth === 2;
+      const isLevel3 = currentDepth === 3;
+
+      updateLayoutForDepth();
+
+      // Return Button Styling with Smooth Capsule Curves
+      btnReturn.classList.remove('hidden');
+      btnReturn.classList.add('flex');
+
+      if (isLevel1) {
+        // Return to the initial 3 bars
+        btnReturn.className = "liquid-btn shrink-0 flex items-center justify-between px-5 py-3 rounded-2xl liquid-panel text-xs font-mono font-semibold text-stone-800 dark:text-stone-200 hover:bg-white/90 dark:hover:bg-white/20 hover:scale-[1.01] transition-all group w-full mb-1 shadow-sm";
+        btnReturn.innerHTML = `
+          <div class="flex items-center space-x-2">
+            <span class="text-stone-900 dark:text-white font-bold">&larr;</span>
+            <span class="tracking-wider uppercase">VOLVER A TEXTOS PRINCIPALES</span>
+          </div>
+          <span class="text-xs font-mono px-2 py-0.5 rounded-full bg-black/5 dark:bg-white/10 tracking-wider">INICIO</span>
+        `;
+        btnReturn.title = "Volver a la selección inicial";
+      } else if (isLevel3) {
+        btnReturn.className = "liquid-btn shrink-0 flex items-center justify-center px-3 py-2.5 rounded-2xl liquid-panel text-xs font-mono font-bold text-stone-800 dark:text-stone-200 hover:bg-white/90 dark:hover:bg-white/20 hover:scale-105 transition-all group w-12 sm:w-14 mb-1.5 shadow-sm";
+        btnReturn.innerHTML = `
+          <span class="text-stone-900 dark:text-white font-bold text-base">&larr;</span>
+        `;
+        btnReturn.title = "Volver al nivel anterior";
+      } else {
+        btnReturn.className = "liquid-btn shrink-0 flex items-center justify-between px-5 py-3 rounded-2xl liquid-panel text-xs font-mono font-semibold text-stone-800 dark:text-stone-200 hover:bg-white/90 dark:hover:bg-white/20 hover:scale-[1.01] transition-all group w-full mb-1 shadow-sm";
+        btnReturn.innerHTML = `
+          <div class="flex items-center space-x-2">
+            <span class="text-stone-900 dark:text-white font-bold">&larr;</span>
+            <span class="tracking-wider uppercase">VOLVER AL NIVEL ANTERIOR</span>
+          </div>
+          <span id="currentLevelTag" class="text-xs font-mono px-2 py-0.5 rounded-full bg-black/5 dark:bg-white/10 tracking-wider">NIVEL 0${currentDepth}</span>
+        `;
+        btnReturn.title = "";
+      }
+
+      // Container Class Configurations based on level
+      if (isLevel1) {
+        submenuNav.classList.remove('level3-nav-compact');
+        verticalButtonsStack.className = "flex-1 min-h-0 h-full w-full wheel-stage";
+        verticalButtonsStack.onscroll = null;
+      } else if (isLevel2) {
+        submenuNav.classList.remove('level3-nav-compact');
+        verticalButtonsStack.className = "flex-1 min-h-0 h-full w-full wheel-stage";
+        verticalButtonsStack.onscroll = null;
+      } else if (isLevel3) {
+        stopLevel1Wheel();
+        submenuNav.classList.add('level3-nav-compact');
+        verticalButtonsStack.className = "flex-1 min-h-0 flex flex-col justify-between gap-1.5 sm:gap-2 items-center w-full h-full";
+      }
+
+      verticalButtonsStack.innerHTML = '';
+      const listToRender = current.children || current.items || [];
+
+      if (listToRender.length === 0) {
+        verticalButtonsStack.innerHTML = `
+          <div class="p-3 text-center rounded-2xl liquid-panel text-xs font-mono text-stone-500 dark:text-stone-400">
+            NODO_TERMINAL
+          </div>
+        `;
+        return;
+      }
+
+      // LEVEL 1 & LEVEL 2 & LEVEL 3: Garantizar que siempre haya un elemento seleccionado visible en el lienzo
+      if (isLevel1 || isLevel2 || isLevel3) {
+        const found = listToRender.some(it => it.id === selectedNode?.id);
+        if (!found) {
+          selectedNode = listToRender[0];
+        }
+        showStageHover(selectedNode);
+      }
+
+      if (isLevel1) {
+        wheelElements = [];
+        const totalItems = listToRender.length;
+        const totalHeight = totalItems * itemStep;
+
+        listToRender.forEach((item, index) => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = "wheel-item liquid-panel rounded-2xl sm:rounded-3xl p-5 text-left flex flex-col justify-between border border-white/80 dark:border-white/20 select-none";
+
+          button.innerHTML = `
+            <div class="flex items-center justify-between w-full mb-1">
+              <div class="flex items-center space-x-2.5">
+                <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-mono font-bold shrink-0 bg-stone-900 text-white dark:bg-white dark:text-stone-900 shadow-sm">
+                  ${index + 1 < 10 ? `0${index + 1}` : index + 1}
+                </div>
+                <span class="text-xs sm:text-sm font-sans font-semibold tracking-wide block text-stone-900 dark:text-white truncate">
+                  ${item.title}
+                </span>
+              </div>
+              <div class="flex items-center space-x-1.5 shrink-0">
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-black/5 dark:bg-white/10 text-stone-500 dark:text-stone-400">
+                  ${item.children ? item.children.length : 0} SUB
+                </span>
+                <div class="w-4 h-4 flex items-center justify-center font-mono text-xs text-stone-400">
+                  &rarr;
+                </div>
+              </div>
+            </div>
+            <p class="text-xs sm:text-[12.5px] font-sans text-stone-600 dark:text-stone-300 leading-relaxed my-1 line-clamp-3">
+              ${item.desc || 'Configuración y parámetros para calibrar el módulo en el espacio editorial.'}
+            </p>
+            <div class="flex items-center justify-between pt-1.5 border-t border-black/5 dark:border-white/10 text-[10px] sm:text-[11px] font-mono text-stone-500 dark:text-stone-400">
+              <span class="tracking-wider">// ${item.code || `SYS_0${index + 1}`}</span>
+              <span class="tracking-widest uppercase opacity-75">${item.category || 'MÓDULO'}</span>
+            </div>
+          `;
+
+          button.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (hasDragged) {
+              return;
+            }
+            playTacticalSound('drillDown');
+            selectedNode = item;
+            navigationStack.push(item);
+            renderVerticalMenu('forward');
+            updateHeaderBreadcrumb();
+            clearStageHover();
+          });
+
+          verticalButtonsStack.appendChild(button);
+          wheelElements.push({ el: button, item, index });
+        });
+
+        // Pointer drag interaction on wheel
+        verticalButtonsStack.onpointerdown = (e) => {
+          isWheelDragging = true;
+          hasDragged = false;
+          wheelDragStartY = e.clientY;
+          wheelStartOffset = wheelTargetOffset;
+          if (snapTimeout) clearTimeout(snapTimeout);
+        };
+
+        const handlePointerMove = (e) => {
+          if (!isWheelDragging) return;
+          const delta = e.clientY - wheelDragStartY;
+          if (Math.abs(delta) > 6) {
+            hasDragged = true;
+          }
+          wheelTargetOffset = wheelStartOffset - delta * 1.15;
+        };
+
+        const handlePointerUp = () => {
+          if (!isWheelDragging) return;
+          isWheelDragging = false;
+          snapToNearestCard(itemStep);
+          setTimeout(() => {
+            hasDragged = false;
+          }, 80);
+        };
+
+        window.removeEventListener('pointermove', handlePointerMove);
+        window.removeEventListener('pointerup', handlePointerUp);
+        window.addEventListener('pointermove', handlePointerMove);
+        window.addEventListener('pointerup', handlePointerUp);
+
+        // Cylindrical Drum Loop: Flat in center, curved only at top/bottom extremes
+        stopLevel1Wheel();
+        function updateWheelLoop() {
+          wheelCurrentOffset += (wheelTargetOffset - wheelCurrentOffset) * 0.14;
+
+          const flatZoneLimit = 215; // Kept proportional to 206px card height
+          const curveRadius = 240;   // Smooth radius of curvature when rolling over the edges
+
+          let minAbsDist = Infinity;
+          let activeIdx = 0;
+
+          wheelElements.forEach(({ el, index }) => {
+            const rawY = (index * itemStep) - wheelCurrentOffset;
+            const y = ((rawY % totalHeight) + totalHeight * 1.5) % totalHeight - (totalHeight / 2);
+
+            let curY = y;
+            let curZ = 0;
+            let curRotX = 0;
+            let opacity = 1;
+
+            if (Math.abs(y) <= flatZoneLimit) {
+              curY = y;
+              curZ = 0;
+              curRotX = 0;
+              opacity = 1;
+            } else if (y < -flatZoneLimit) {
+              const excess = -flatZoneLimit - y;
+              const theta = Math.min(Math.PI * 0.52, excess / curveRadius);
+              curY = -flatZoneLimit - curveRadius * Math.sin(theta);
+              curZ = -curveRadius * (1 - Math.cos(theta));
+              curRotX = -(theta * (180 / Math.PI));
+              opacity = Math.max(0, Math.cos(theta * 0.95));
+            } else {
+              const excess = y - flatZoneLimit;
+              const theta = Math.min(Math.PI * 0.52, excess / curveRadius);
+              curY = flatZoneLimit + curveRadius * Math.sin(theta);
+              curZ = -curveRadius * (1 - Math.cos(theta));
+              curRotX = +(theta * (180 / Math.PI));
+              opacity = Math.max(0, Math.cos(theta * 0.95));
+            }
+
+            if (opacity <= 0.02 || Math.abs(y) > (totalHeight / 2) - 10) {
+              el.style.display = 'none';
+            } else {
+              el.style.display = 'flex';
+              el.style.transform = `translate3d(0, ${curY.toFixed(2)}px, ${curZ.toFixed(2)}px) rotateX(${curRotX.toFixed(2)}deg)`;
+              el.style.opacity = opacity.toFixed(3);
+
+              if (Math.abs(y) < minAbsDist) {
+                minAbsDist = Math.abs(y);
+                activeIdx = index;
+              }
+            }
+          });
+
+          wheelElements.forEach(({ el }, idx) => {
+            if (idx === activeIdx) {
+              el.classList.add('wheel-item-active', 'bg-white/95', 'dark:bg-white/25');
+              el.classList.remove('bg-white/70', 'dark:bg-white/10');
+            } else {
+              el.classList.remove('wheel-item-active', 'bg-white/95', 'dark:bg-white/25');
+              el.classList.add('bg-white/70', 'dark:bg-white/10');
+            }
+          });
+
+          if (activeIdx !== lastCenteredIndex && listToRender[activeIdx]) {
+            lastCenteredIndex = activeIdx;
+            selectedNode = listToRender[activeIdx];
+            showStageHover(selectedNode);
+            playTacticalSound('tap');
+          }
+
+          wheelRafId = requestAnimationFrame(updateWheelLoop);
+        }
+
+        updateWheelLoop();
+        return;
+      }
+
+      // LEVEL 2: Rueda infinita manteniendo exactamente el formato, tamaño y espaciado nativo de Nivel 2
+      if (isLevel2) {
+        wheelElements = [];
+        const baseItems = listToRender;
+        
+        // Multiplicador para garantizar rotación continua y uniforme sin importar cuántos submenús haya
+        const repetitions = baseItems.length < 5 ? 4 : 2;
+        const totalItemsCount = baseItems.length * repetitions;
+
+        // Paleta de colores vibrantes editoriales para el icono en cada menú de Nivel 2
+        const l2IconColors = [
+          '#F4007A', // Fucsia/Magenta distintivo
+          '#00C2D1', // Cian eléctrico
+          '#F5A623', // Ámbar cálido
+          '#10B981', // Verde esmeralda
+          '#8B5CF6', // Púrpura vivo
+          '#3B82F6', // Azul cobalto
+          '#EC4899', // Rosa encendido
+          '#F97316'  // Naranja intenso
+        ];
+
+        // Altura y espaciado optimizados para albergar el icono mediano y la descripción enriquecida
+        const l2CardHeight = 168;
+        const l2Step = 186;
+        const totalHeight = totalItemsCount * l2Step;
+
+        wheelCurrentOffset = 0;
+        wheelTargetOffset = 0;
+        lastCenteredIndex = -1;
+
+        for (let r = 0; r < repetitions; r++) {
+          baseItems.forEach((item, baseIndex) => {
+            const index = r * baseItems.length + baseIndex;
+            const hasSubOptions = item.children && item.children.length > 0;
+            const itemColor = l2IconColors[baseIndex % l2IconColors.length];
+
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = "wheel-item liquid-panel rounded-2xl sm:rounded-3xl p-4 sm:p-5 text-left flex flex-col justify-between border border-white/80 dark:border-white/20 select-none";
+            button.style.height = `${l2CardHeight}px`;
+            button.style.marginTop = `-${l2CardHeight / 2}px`;
+
+            button.innerHTML = `
+              <div class="flex items-center justify-between w-full mb-1">
+                <div class="flex items-center space-x-2.5">
+                  <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-mono font-bold shrink-0 bg-stone-900 text-white dark:bg-white dark:text-stone-900 shadow-sm">
+                    ${baseIndex + 1 < 10 ? `0${baseIndex + 1}` : baseIndex + 1}
+                  </div>
+                  <div>
+                    <span class="text-sm sm:text-base font-sans font-semibold tracking-wide block truncate text-stone-900 dark:text-white">
+                      ${item.title}
+                    </span>
+                    <span class="text-[10px] font-mono tracking-wider text-stone-500 dark:text-stone-400 block -mt-0.5">
+                      // CONFIGURACIÓN DINÁMICA
+                    </span>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-1.5 shrink-0">
+                  ${hasSubOptions ? `
+                    <span class="text-[10px] sm:text-xs font-mono px-2 py-0.5 rounded-full bg-black/5 dark:bg-white/10 text-stone-500 dark:text-stone-400">
+                      ${item.children.length} CANALES
+                    </span>
+                  ` : ''}
+                  <div class="w-5 h-5 flex items-center justify-center font-mono text-xs sm:text-sm text-stone-400">
+                    ${hasSubOptions ? '&rarr;' : '&bull;'}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fila central: Icono mediano a la izquierda con color dinámico + Descripción rica -->
+              <div class="flex items-center gap-3 my-1.5 w-full">
+                <!-- Icono vectorial SVG adjunto con color único por menú -->
+                <div class="w-10 h-10 sm:w-11 sm:h-11 shrink-0 rounded-2xl flex items-center justify-center p-1.5 shadow-sm border border-white/70 dark:border-white/15 transition-transform hover:scale-105" 
+                     style="color: ${itemColor}; background: ${itemColor}18;" 
+                     title="${item.title}">
+                  <svg viewBox="0 0 135.21 135.17" class="w-full h-full block" fill="currentColor" role="img" aria-label="Logo Icono">
+                    <path d="M134.8,35.21c-.09-1.8-.17-4.72-.24-8.76-.04-2.44-.06-6.65-.04-12.64,0-2.53-.04-4.85-.15-6.94-.06-1.1-.18-2.17-.37-3.18-.45-2.37-2.45-2.88-4.49-3.05-1.6-.13-3.29-.18-5.06-.17-5.12.03-10.43.05-15.94.06-3.46,0-7.65-.12-12.57-.37-1.64-.08-3.04-.13-4.18-.15-3.11-.05-6.37,0-9.27.82-4.75,1.34-3.86,5.92-3.06,9.48.12.51.49,2.07,1.13,4.68.38,1.55.26,3.35.16,4.89v.04c.02.06.08.09.14.07,1.32-.47,2.52-1.09,3.76-1.66.43-.2,1.03-.5,1.82-.91,3.82-1.99,6.47-3.36,7.97-4.1,3.88-1.92,7.88-3.57,11.98-4.95,1.51-.51,3.38-1.04,5.6-1.59,2.98-.74,5.82-1.19,8.51-1.36,1.32-.08,2.87-.12,3.99.33.19.08.3.28.24.46-.13.44-1.02.85-1.41,1.01-1.19.48-1.96.78-2.31.9-7.25,2.4-14.65,5.05-22.2,7.94-1.37.53-2.87,1.13-4.49,1.81-3.98,1.67-6.07,2.68-10.47,4.78-1.07.51-5.08,2.5-12.03,5.97-2.56,1.28-4.75,2.49-6.58,3.64-.47.29-.76.59-.87.89-.14.36-.11.64.09.82.76.72,1.23,1.18,1.42,1.39.26.3.5.6.73.91-.77.73-1.66,1.33-2.64,1.75-.33.05-.68.11-1.05.22-6.87,1.96-11.92,8.16-12.56,15.24-.23,2.55.27,4.81,1.25,7.09,0,.02,0,.03,0,.05-.02.02-.04.02-.06,0-1.21-1.42-1.94-3.05-2.59-4.84-.03-.09-.12-.14-.22-.12-.96.22-1.94.31-2.94.27-1.37-.05-2.65-.12-3.84-.19-2.35-.14-4.78-.11-7.19.1-1.8.44-3.57.99-5.31,1.61-3.57,1.27-6.79,3.19-9.64,5.63,1.87,2.79,5.39,4.52,8.63,5.21.68.14,1.5.25,2.47.33,1.46.11,2.8.24,4.05.44,1.47.23,2.53.4,3.88.45,3.13.11,6.22-.11,9.27-.64.02,0,.04,0,.05.02s0,.05-.02.06c-4.14,2.12-8.48,3.32-13.03,3.6-4.26.26-8.39-.47-12.38-2.2-2.11-.91-3.84-1.96-5.19-3.16-1.59-1.41-2.79-2.87-3.6-4.39-1.82-3.41-1.95-6.86-.37-10.35,1.69-3.73,5.39-6.32,9.16-7.64,2.66-.94,5.34-1.56,8.03-1.87,1.17-.13,3.15-.34,5.95-.6.51-.05,1.48-.21,2.91-.49,1.83-.35,3.53-.96,5.09-1.82,3.05-1.67,5.15-4.63,5.31-8.1.05-1.1,0-2.05-.18-2.86-1-4.71-4.79-8.66-9.05-10.68-4.33-2.05-9.66-2.65-14.12-.7-.77.34-1.5.87-2.21,1.6-.78.82-.88,2.12.44,2.37.2.04.69,0,1.48-.08,3.35-.4,6.29.02,9.11,1.62,2.14,1.21,4.45,4.17,2.97,6.64-1.47,2.44-5.36,2.86-7.95,2.91-3.04.05-5.4.12-7.07.2-4.27.21-8.71,1.45-12.36,3.92-4.02,2.72-7.13,6.44-9.03,10.88C-.12,52.7-.56,57.88.7,63.31c1.17,5.05,3.9,9.51,7.92,12.81,3.96,3.24,8.81,5.41,13.71,6.43,5.49,1.14,10.99,1.22,16.49.26,5.86-1.03,11.3-3.03,16.31-6.01h.04s0,.04,0,.05c-2.06,1.79-4.3,3.44-6.7,4.94-3.95,2.46-8.17,4.18-12.66,5.16-1.2.26-1.91.59-2.94,1.17-2.56,1.42-4.83,3-6.82,4.74-3.32,2.91-5.63,6.57-6.45,10.91-.58,3.08-.22,6.56,1.28,9.35.37.69,1.58,1.87,1.79.25.41-3.23,1.67-5.87,4.34-7.76,1.19-.84,2.75-1.45,4.06-1.95,2.36-.89,4.41-1.7,6.14-2.44,2.98-1.27,5.85-2.72,8.61-4.34,4.55-2.68,8.6-5.91,12.15-9.71,0-.01.03-.02.04,0,0,0,.02.03,0,.04-.96,1.73-2.04,3.82-3.21,6.27-.2.41-1.53,3.24-3.98,8.49-.31.67-.98,1.98-2,3.93-.79,1.5-1.68,2.94-2.69,4.3-1.21,1.65-2.38,2.86-3.53,3.64-2.22,1.51-4.82,2.05-7.52,1.71-1.31-.16-2.49-.43-3.54-.82-.36-.13-.68-.15-.96-.06-1.21.4-.42,1.66.14,2.25,1.39,1.46,2.95,2.62,4.67,3.5,4.52,2.31,10.13,2.98,14.91,1.34,3.3-1.14,6.06-3.16,8.28-6.06,4.31-5.64,5.25-12.54,6.29-19.34.45-2.94,1.16-5.78,2.11-8.52,0-.01.02-.02.03-.02.02,0,.03.01.04.03-.07,1.2-.1,2.56-.08,4.07.01.91.13,2.22.37,3.92.2,1.45.35,2.86.46,4.23.34,4.23-.49,8.84-2.11,12.83-1.48,3.65-3.9,6.99-7.07,9.32-.77.56-.42,1.04-.08,1.83.48,1.11.92,1.98,1.32,2.61.81,1.29,1.97,2.54,3.48,3.74,3.53,2.81,7.95,4.29,12.43,4.67,5.02.42,9.71-.59,14.06-3.03,1.64-.92,3.27-2.16,4.88-3.71,3.64-3.5,5.99-7.67,7.06-12.5.41-1.84.64-3.63.72-5.38.13-3.22.22-5.32.27-6.3.09-1.83.44-3.52,1.08-5.05.99-2.42,3.44-3.39,5.77-2.09,2.43,1.35,3.89,4.19,4.31,6.95.28,1.89.3,3.58.06,5.09,0,.01-.02.32-.06.92-.1,1.52.93,1.99,2.12,1.16.63-.44,1.18-1.08,1.65-1.92,2.15-3.85,1.89-8.78.52-12.84-.48-1.41-1.18-2.77-1.99-4.06-2.22-3.56-5.96-6.49-10.21-7.04-3.06-.39-5.75.41-8.07,2.42-1.58,1.37-2.7,3.37-3.39,5.3-1.04,2.94-1.43,5.99-1.76,9.42-.07.71-.28,2.13-.63,4.27-.26,1.59-.81,3.61-1.32,5.04-1.14,3.21-2.96,6.37-5.64,8.45-1.99,1.54-4.21,2.4-6.65,2.56-1.7.11-3.38-.34-4.85-1.12-.47-.25-1-.68-1.62-1.28-.04-.04-.04-.11,0-.15,1.01-1.09,1.81-2.11,2.4-3.03,1.05-1.65,1.93-3.42,2.65-5.32,1.68-4.46,2.53-9.05,2.54-13.77,0-1.84-.03-3.13-.09-3.87-.15-1.78-.26-3.2-.34-4.25-.1-1.34-.05-2.36.24-3.51.03-.13-.04-.27-.18-.31-1.91-.59-3.56-1.49-4.98-2.7,0,0-.01-.02,0-.03,0-.01.02-.02.03-.01,2.29,1.15,5.05,1.58,7.63,1.28,5.85-.68,10.82-4.22,13.59-9.4.72-1.34,1.13-2.7,1.48-4.06.53-.95,1.15-1.83,1.9-2.56.73.6,1.36,1.3,2.18,2.06.62.57,1.46.09,1.86-.49,3.59-5.27,5.48-8.36,9.87-15.34.92-1.47,1.76-2.81,2.49-4.04,3.66-6.09,7.21-12.41,9.71-17.57,1.21-2.5,2.07-4.38,2.58-5.66.57-1.42.96-2.38,1.18-2.9,0-.02.02-.02.04-.02s.04.02.04.05c-.86,3.8-1.94,7.5-3.24,11.1-.46,1.27-1.1,2.73-1.91,4.39-1,2.03-3.05,5.74-6.16,11.13-.92,1.6-1.56,2.7-1.93,3.29-.01.02-.02.05-.01.07.01.05.06.09.12.08.41-.08.84-.12,1.3-.13,1.72-.03,3.5.09,5.35.38,1.72.27,3.48.55,5.29.84.45.07.98.14,1.6.19.78.07,1.32.09,1.61.06,1.51-.17,2.57-.93,3.19-2.29.54-1.19.86-2.57.96-4.13.32-4.83.04-8.84-.24-14.45l-.03-.05Z"/>
+                    <path d="M12.32,89.55c.23-2.46,1.41-4.34,3-5.9-.09-.05-.18-.11-.27-.17-2.32-.93-6.62-4.17-8.49-5.38,0,0-.01,0-.02.01-1.46,1.37-2.81,2.87-3.57,4.66-.95,2.26-.56,6.32.35,8.66,1.22,3.13,5.45,6.26,8.55,7.94.75.41,3.35,1.74,3.74.42.11-.36-.12-.96-.31-1.22-1.88-2.5-3.27-5.86-2.98-9.02Z"/>
+                  </svg>
+                </div>
+
+                <!-- Texto descriptivo enriquecido -->
+                <p class="text-xs sm:text-[12px] font-sans text-stone-600 dark:text-stone-300 leading-relaxed line-clamp-3 flex-1">
+                  ${item.desc}
+                </p>
+              </div>
+
+              <div class="flex items-center justify-between pt-1.5 border-t border-black/5 dark:border-white/10 text-[11px] font-mono text-stone-500 dark:text-stone-400">
+                <span class="tracking-wider flex items-center space-x-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full inline-block" style="background-color: ${itemColor};"></span>
+                  <span>// ${item.code || `OPT_0${baseIndex + 1}`}</span>
+                </span>
+                <span class="text-[10px] tracking-widest uppercase opacity-85 font-semibold" style="color: ${itemColor};">
+                  ${item.category || 'PARÁMETRO'}
+                </span>
+              </div>
+            `;
+
+            button.addEventListener('click', (e) => {
+              e.stopPropagation();
+              if (hasDragged) return;
+              if (hasSubOptions) {
+                playTacticalSound('drillDown');
+                navigationStack.push(item);
+                // Situar automáticamente en el primer elemento del nivel 3
+                selectedNode = item.children[0];
+                renderVerticalMenu('forward');
+                updateHeaderBreadcrumb();
+                showStageHover(selectedNode);
+              } else {
+                selectedNode = item;
+                playTacticalSound('tap');
+                showStageHover(item);
+              }
+            });
+
+            verticalButtonsStack.appendChild(button);
+            wheelElements.push({ el: button, item, index, baseIndex });
+          });
+        }
+
+        // Pointer drag interaction para Nivel 2
+        verticalButtonsStack.onpointerdown = (e) => {
+          isWheelDragging = true;
+          hasDragged = false;
+          wheelDragStartY = e.clientY;
+          wheelStartOffset = wheelTargetOffset;
+          if (snapTimeout) clearTimeout(snapTimeout);
+        };
+
+        const handlePointerMoveL2 = (e) => {
+          if (!isWheelDragging) return;
+          const delta = e.clientY - wheelDragStartY;
+          if (Math.abs(delta) > 6) {
+            hasDragged = true;
+          }
+          wheelTargetOffset = wheelStartOffset - delta * 1.15;
+        };
+
+        const handlePointerUpL2 = () => {
+          if (!isWheelDragging) return;
+          isWheelDragging = false;
+          snapToNearestCard(l2Step);
+          setTimeout(() => {
+            hasDragged = false;
+          }, 80);
+        };
+
+        window.removeEventListener('pointermove', handlePointerMoveL2);
+        window.removeEventListener('pointerup', handlePointerUpL2);
+        window.addEventListener('pointermove', handlePointerMoveL2);
+        window.addEventListener('pointerup', handlePointerUpL2);
+
+        // Bucle 3D para Nivel 2: plano en el centro y curvatura en bordes
+        stopLevel1Wheel();
+        function updateWheelLoopL2() {
+          wheelCurrentOffset += (wheelTargetOffset - wheelCurrentOffset) * 0.14;
+
+          const flatZoneLimit = 165;
+          const curveRadius = 210;
+
+          let minAbsDist = Infinity;
+          let activeBaseIdx = 0;
+
+          wheelElements.forEach(({ el, index, baseIndex }) => {
+            const rawY = (index * l2Step) - wheelCurrentOffset;
+            const y = ((rawY % totalHeight) + totalHeight * 1.5) % totalHeight - (totalHeight / 2);
+
+            let curY = y;
+            let curZ = 0;
+            let curRotX = 0;
+            let opacity = 1;
+
+            if (Math.abs(y) <= flatZoneLimit) {
+              curY = y;
+              curZ = 0;
+              curRotX = 0;
+              opacity = 1;
+            } else if (y < -flatZoneLimit) {
+              const excess = -flatZoneLimit - y;
+              const theta = Math.min(Math.PI * 0.52, excess / curveRadius);
+              curY = -flatZoneLimit - curveRadius * Math.sin(theta);
+              curZ = -curveRadius * (1 - Math.cos(theta));
+              curRotX = -(theta * (180 / Math.PI));
+              opacity = Math.max(0, Math.cos(theta * 0.95));
+            } else {
+              const excess = y - flatZoneLimit;
+              const theta = Math.min(Math.PI * 0.52, excess / curveRadius);
+              curY = flatZoneLimit + curveRadius * Math.sin(theta);
+              curZ = -curveRadius * (1 - Math.cos(theta));
+              curRotX = +(theta * (180 / Math.PI));
+              opacity = Math.max(0, Math.cos(theta * 0.95));
+            }
+
+            if (opacity <= 0.02 || Math.abs(y) > (totalHeight / 2) - 10) {
+              el.style.display = 'none';
+            } else {
+              el.style.display = 'flex';
+              el.style.transform = `translate3d(0, ${curY.toFixed(2)}px, ${curZ.toFixed(2)}px) rotateX(${curRotX.toFixed(2)}deg)`;
+              el.style.opacity = opacity.toFixed(3);
+
+              if (Math.abs(y) < minAbsDist) {
+                minAbsDist = Math.abs(y);
+                activeBaseIdx = baseIndex;
+              }
+            }
+          });
+
+          wheelElements.forEach(({ el, baseIndex }) => {
+            if (baseIndex === activeBaseIdx) {
+              el.classList.add('wheel-item-active', 'bg-white/95', 'dark:bg-white/25');
+              el.classList.remove('bg-white/70', 'dark:bg-white/10');
+            } else {
+              el.classList.remove('wheel-item-active', 'bg-white/95', 'dark:bg-white/25');
+              el.classList.add('bg-white/70', 'dark:bg-white/10');
+            }
+          });
+
+          if (activeBaseIdx !== lastCenteredIndex && baseItems[activeBaseIdx]) {
+            lastCenteredIndex = activeBaseIdx;
+            selectedNode = baseItems[activeBaseIdx];
+            showStageHover(selectedNode);
+            playTacticalSound('tap');
+          }
+
+          wheelRafId = requestAnimationFrame(updateWheelLoopL2);
+        }
+
+        updateWheelLoopL2();
+        return;
+      }
+
+      // RENDER ITEMS FOR LEVEL 3
+      listToRender.forEach((item, index) => {
+        const isSelected = selectedNode && selectedNode.id === item.id;
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.style.animation = `menuSlideIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) ${index * 0.02}s both`;
+
+        const numberLabel = item.num || (index + 1 < 10 ? `0${index + 1}` : `${index + 1}`);
+        button.className = `liquid-btn flex-1 min-h-0 w-full flex flex-col items-center justify-center rounded-2xl liquid-panel transition-all duration-200 group ${
+          isSelected
+            ? 'bg-white dark:bg-white/30 text-stone-950 dark:text-white scale-[1.03] shadow-md font-bold'
+            : 'hover:scale-[1.02] hover:bg-white/80 dark:hover:bg-white/20 text-stone-800 dark:text-stone-200 shadow-sm'
+        }`;
+
+        button.innerHTML = `
+          <span class="l3-num font-mono text-xl sm:text-2xl font-bold tracking-wider ${
+            isSelected ? 'text-stone-950 dark:text-white' : 'text-stone-700 dark:text-stone-300 group-hover:text-stone-950 dark:group-hover:text-white'
+          }">
+            ${numberLabel}
+          </span>
+          <span class="l3-dot ${
+            isSelected 
+              ? 'w-1.5 h-1.5 rounded-full bg-stone-900 dark:bg-cyan-400 mt-1' 
+              : 'w-1 h-1 rounded-full bg-stone-400 dark:bg-stone-500 opacity-40 mt-1'
+          }"></span>
+        `;
+
+        button.addEventListener('mouseenter', () => {
+          selectedNode = item;
+          updateLevel3ActiveButtons(index);
+          showStageHover(item);
+        });
+
+        button.addEventListener('click', () => {
+          selectedNode = item;
+          playTacticalSound('tap');
+          updateLevel3ActiveButtons(index);
+          showStageHover(item);
+        });
+
+        verticalButtonsStack.appendChild(button);
+      });
+    }
+
+    // Actualiza de manera fluida y sin re-renderizado los botones del Nivel 3
+    function updateLevel3ActiveButtons(selectedIndex) {
+      const buttons = verticalButtonsStack.querySelectorAll('button');
+      buttons.forEach((btn, idx) => {
+        const isSel = idx === selectedIndex;
+        const numSpan = btn.querySelector('.l3-num');
+        const dotSpan = btn.querySelector('.l3-dot');
+        if (isSel) {
+          btn.className = "liquid-btn flex-1 min-h-0 w-full flex flex-col items-center justify-center rounded-2xl liquid-panel transition-all duration-200 group bg-white dark:bg-white/30 text-stone-950 dark:text-white scale-[1.03] shadow-md font-bold";
+          if (numSpan) numSpan.className = "l3-num font-mono text-xl sm:text-2xl font-bold tracking-wider text-stone-950 dark:text-white";
+          if (dotSpan) dotSpan.className = "l3-dot w-1.5 h-1.5 rounded-full bg-stone-900 dark:bg-cyan-400 mt-1";
+        } else {
+          btn.className = "liquid-btn flex-1 min-h-0 w-full flex flex-col items-center justify-center rounded-2xl liquid-panel transition-all duration-200 group hover:scale-[1.02] hover:bg-white/80 dark:hover:bg-white/20 text-stone-800 dark:text-stone-200 shadow-sm";
+          if (numSpan) numSpan.className = "l3-num font-mono text-xl sm:text-2xl font-bold tracking-wider text-stone-700 dark:text-stone-300 group-hover:text-stone-950 dark:group-hover:text-white";
+          if (dotSpan) dotSpan.className = "l3-dot w-1 h-1 rounded-full bg-stone-400 dark:bg-stone-500 opacity-40 mt-1";
+        }
+      });
+    }
+
+    // Navegación con la rueda del ratón (Scroll Wheel)
+    let lastWheelTime = 0;
+    window.addEventListener('wheel', (e) => {
+      // Exclusivo para el Nivel 3 (longitud del stack = 3)
+      if (navigationStack.length === 3) {
+        const current = getCurrentTier();
+        const items = current.children || current.items || [];
+        if (!items || items.length === 0) return;
+
+        e.preventDefault();
+
+        const now = Date.now();
+        if (now - lastWheelTime < 130) return;
+        lastWheelTime = now;
+
+        let currentIndex = items.findIndex(it => it.id === selectedNode?.id);
+        if (currentIndex === -1) currentIndex = 0;
+
+        if (e.deltaY > 0) {
+          currentIndex = Math.min(items.length - 1, currentIndex + 1);
+        } else if (e.deltaY < 0) {
+          currentIndex = Math.max(0, currentIndex - 1);
+        }
+
+        selectedNode = items[currentIndex];
+        playTacticalSound('tap');
+        showStageHover(selectedNode);
+        updateLevel3ActiveButtons(currentIndex);
+      } else if (navigationStack.length === 1 && !isInitialState) {
+        e.preventDefault();
+        onWheelRotate(e.deltaY, itemStep);
+      } else if (navigationStack.length === 2 && !isInitialState) {
+        e.preventDefault();
+        onWheelRotate(e.deltaY, 186);
+      }
+    }, { passive: false });
+
+    // Attach Click and Hover listeners to the Initial 3 Long Bars
+    document.querySelectorAll('.initial-bar-btn').forEach(btn => {
+      const mode = btn.getAttribute('data-mode');
+
+      btn.addEventListener('mouseenter', () => {
+        const preview = initialBarPreviews[mode];
+        if (preview) showStageHover(preview);
+      });
+
+      btn.addEventListener('mouseleave', () => {
+        clearStageHover();
+      });
+
+      btn.addEventListener('click', () => {
+        playTacticalSound('drillDown');
+        enterWorkspace(mode);
+      });
+    });
+
+    // Return Button Handler
+    btnReturn.addEventListener('click', () => {
+      if (navigationStack.length > 1) {
+        playTacticalSound('back');
+        navigationStack.pop();
+        const parent = getCurrentTier();
+        selectedNode = parent;
+        clearStageHover();
+        renderVerticalMenu('back');
+        updateHeaderBreadcrumb();
+      } else if (navigationStack.length === 1) {
+        // Return back to the initial 3 long bars
+        returnToInitialBars();
+      }
+    });
+
+    // Reset to Root Home Navigation (Footer Home Icon)
+    const btnFooterHome = document.getElementById('btnFooterHome');
+    if (btnFooterHome) {
+      btnFooterHome.addEventListener('click', () => {
+        returnToInitialBars();
+      });
+    }
+
+    // Reset to Root Home Navigation (Top Header Home Button)
+    const btnTopHome = document.getElementById('btnTopHome');
+    if (btnTopHome) {
+      btnTopHome.addEventListener('click', () => {
+        returnToInitialBars();
+      });
+    }
+
+    // Dock Buttons Handler (A, B, C modes inside workspace)
+    const dockButtons = document.querySelectorAll('.dock-item');
+    dockButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const targetMode = btn.getAttribute('data-mode');
+        if (currentMode === targetMode && navigationStack.length === 1) return;
+
+        playTacticalSound('modeSwitch');
+        currentMode = targetMode;
+        updateDockActiveVisuals();
+
+        navigationStack = [datasets[currentMode]];
+        selectedNode = datasets[currentMode];
+        clearStageHover();
+        renderVerticalMenu('dock');
+        updateHeaderBreadcrumb();
+      });
+    });
+
+    // Interactive Liquid Glass Mouse Tracking (Dynamic Specular Caustics)
+    if (rightStage) {
+      rightStage.addEventListener('mousemove', (e) => {
+        const rect = rightStage.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        rightStage.style.setProperty('--mouse-x', `${x}%`);
+        rightStage.style.setProperty('--mouse-y', `${y}%`);
+      });
+    }
+
+    // Theme Switcher Controls
+    const btnLightMode = document.getElementById('btnLightMode');
+    const btnDarkMode = document.getElementById('btnDarkMode');
+    const htmlElement = document.documentElement;
+
+    function applyTheme(isDark) {
+      if (isDark) {
+        htmlElement.classList.add('dark');
+        localStorage.setItem('liquid_theme', 'dark');
+        btnDarkMode.className = "flex items-center space-x-1.5 px-3 py-1 rounded-full bg-white/20 text-white font-semibold shadow-sm transition";
+        btnLightMode.className = "flex items-center space-x-1.5 px-3 py-1 rounded-full bg-transparent text-stone-400 font-semibold transition";
+      } else {
+        htmlElement.classList.remove('dark');
+        localStorage.setItem('liquid_theme', 'light');
+        btnLightMode.className = "flex items-center space-x-1.5 px-3 py-1 rounded-full bg-white text-stone-900 font-semibold shadow-sm transition";
+        btnDarkMode.className = "flex items-center space-x-1.5 px-3 py-1 rounded-full bg-transparent text-stone-500 font-semibold transition";
+      }
+    }
+
+    btnLightMode.addEventListener('click', () => {
+      playTacticalSound('tap');
+      applyTheme(false);
+    });
+
+    btnDarkMode.addEventListener('click', () => {
+      playTacticalSound('tap');
+      applyTheme(true);
+    });
+
+    // Initial setup on window load
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('liquid_theme');
+      if (savedTheme === 'dark') {
+        applyTheme(true);
+      } else {
+        applyTheme(false);
+      }
+
+      updateHeaderBreadcrumb();
+    });
+  </script>
+
+</body>
+</html>
